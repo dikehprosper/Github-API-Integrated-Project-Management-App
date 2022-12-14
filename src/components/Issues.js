@@ -2,6 +2,7 @@ import React from "react";
 import DeleteItem2 from "./DeleteItem2";
 import { MdDriveFileRenameOutline } from "react-icons/md";
 import { HiOutlineArchive } from "react-icons/hi";
+import { VscIssueDraft } from "react-icons/vsc";
 
 function Issues(props) {
   const style3 = {
@@ -14,7 +15,7 @@ function Issues(props) {
 
   function section2() {
     props.section2(props.id, props.pick);
-  }
+}
   
   
 
@@ -34,7 +35,7 @@ function Issues(props) {
   return (
     <div className="issues1" style={style3} onMouseEnter={section} onMouseLeave= {section2}>
       <div className="issues2">
-        Draft
+      <VscIssueDraft className="icons" /> Draft
         <div className="drop-down5" style={style6} onClick= {() => {props.DropItem2(props.id,props.pick, props.selection)}} >
           <div className="toggle2" >...</div>
           <div className="list-drop-down4" style={style7} >
