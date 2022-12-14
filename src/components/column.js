@@ -65,8 +65,6 @@ function Column(props) {
   };
 
   const handleShow = () => {
-    props.closeInput();
-
     props.handleAllShow(props.id);
   };
 
@@ -120,8 +118,8 @@ function Column(props) {
             </div>
             <div className="count">{props.count}</div>
           </div>
-          <div className="drop-down4" onClick={props.onClick}>
-            <div className="toggle">...</div>
+          <div className="drop-down4" >
+            <div className="toggle" onClick={props.onClick}>...</div>
             <div className="list-drop-down" style={style2}>
               <div className="list-drop-down2">
                 <div className="list1" onClick={handleShow}>
@@ -151,7 +149,7 @@ function Column(props) {
         </div>
         <div className="main-section">
           <div>
-            {props.issue.map((issue) => {
+            {issue.map((issue) => {
               return (
                 <Issues
                   key={issue.id}
@@ -193,8 +191,8 @@ function Column(props) {
             </div>
             <div className="count">{props.count}</div>
           </div>
-          <div className="drop-down4" onClick={props.onClick}>
-            <div className="toggle">...</div>
+          <div className="drop-down4">
+            <div className="toggle" onClick={props.onClick}>...</div>
             <div className="list-drop-down" style={style2}>
               <div className="list-drop-down2">
                 <div className="list1" onClick={handleShow}>
@@ -223,7 +221,7 @@ function Column(props) {
         </div>
         <div className="main-section">
           <div>
-            {props.issue.map((issue) => {
+            {issue.map((issue) => {
               return (
                 <Issues
                   key={issue.id}

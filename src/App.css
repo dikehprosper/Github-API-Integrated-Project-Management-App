@@ -189,7 +189,6 @@ button.add-button:hover {
 
 .drop-down4 {
   color: white;
-  padding: 2px 1px 18px 2px;
   font-size: 14px;
   border-radius: 5px;
   letter-spacing: 2px;
@@ -200,6 +199,7 @@ button.add-button:hover {
   align-content: center;
   cursor: pointer;
   position: relative;
+  flex-direction: row;
 }
 
 .drop-down5 {
@@ -220,7 +220,16 @@ button.add-button:hover {
 
 
 .toggle {
-  margin-top: -5px;
+  display: flex;
+  width: 22px;
+  border-radius: 5px;
+  height: 22px;
+  object-fit: contain;
+  justify-content: center;
+  flex-direction: row;
+  align-items: center;
+  padding-bottom: 7px;
+  padding-left: 2px;
 }
 
 

@@ -7,7 +7,18 @@ import { propTypes } from "react-bootstrap/esm/Image";
 
 function App() {
   const [dropDown, setDropDown] = React.useState(false);
-  const [tables, setTables] = React.useState("");
+  const [showss, setShowss] = React.useState(false);
+
+
+  const handleShowss = () => {
+    setShowss(true);
+    const handleAllShow = columns.map((column) => {
+      return { ...column, show: false, pick: false, highlight: false, called:false };
+    });
+    setColumns(handleAllShow);
+  };
+
+  const hideShowss = () => setShowss(false);
 
   const onClick1 = () => {
     setDropDown(true);
@@ -21,9 +32,7 @@ function App() {
     setDropDown(false);
   };
   const [columns, setColumns] = React.useState([]);
-  
 
-  const [visibility, setVisibility] = React.useState(false);
   useEffect(() => {
     let columns = [
       {
@@ -58,11 +67,10 @@ function App() {
 
   function DropItem(id) {
     onClick2();
-    closeInput();
     setColumns((column) =>
       column.map((column) => {
         return id === column.id
-          ? { ...column, pick: !column.pick, highlight: false,show: false, called:false}
+          ? { ...column, pick: !column.pick, highlight: false, called:false, show: false}
           : { ...column, show: false, pick: false, highlight: false, called:false  };
       })
     );
@@ -79,11 +87,12 @@ function App() {
   }
 
   function handleAllShow(id) {
+    setShowss(false);
     const handleAllShow = columns.map((column) => {
       if (id === column.id) {
-        return { ...column, show: true };
+        return { ...column, show: true, highlight: false,pick: false, called:false};
       }
-      return { ...column, show: false };
+      return { ...column, show: false,pick: false, highlight: false, called:false };
     });
     setColumns(handleAllShow);
   }
@@ -222,11 +231,12 @@ function App() {
   
   
   function openInput(id) {
+    setShowss(false);
     const specifiedInput = columns.map(column => {
       if (id === column.id){
-        return {...column, called:true, highlight: true, pick:false}
+        return {...column, called:true, highlight: true, pick:false, show: false}
       };
-      return {...column, pick:false}
+      return {...column, pick:false, called:false, highlight: false, pick:false, show: false}
     });
     setColumns(specifiedInput);
   }
@@ -274,6 +284,9 @@ function App() {
             newColumns={newColumns}
             Hidden={Hidden}
             Visible={Visible}
+            handleShowss={handleShowss}
+            showss={showss}
+            hideShowss={hideShowss}
           />
         ) : (
           <button onClick={onClick1} className="add-button">
