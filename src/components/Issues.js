@@ -7,6 +7,7 @@ import { VscIssueDraft } from "react-icons/vsc";
 function Issues(props) {
   const style3 = {
     display: props.tables === "" ? "none" : "grid",
+    border: props.selection ? "1px solid grey" : "none",
   };
 
   function section() {
@@ -28,6 +29,8 @@ function Issues(props) {
   const style8 = {
     background: props.selection ? "rgba(128, 128, 128, 0.411)" : "transparent",
   };
+
+
 
   return (
     <div
