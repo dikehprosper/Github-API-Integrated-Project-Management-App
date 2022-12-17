@@ -1,9 +1,8 @@
 import "./App.css";
 import DropDownItem from "./components/DropDownItem";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import Column from "./components/column";
 import { nanoid } from "nanoid";
-import { propTypes } from "react-bootstrap/esm/Image";
 
 function App() {
   const [dropDown, setDropDown] = React.useState(false);
@@ -31,6 +30,8 @@ function App() {
   const onClick2 = () => {
     setDropDown(false);
   };
+
+ 
   const [columns, setColumns] = React.useState([]);
 
   useEffect(() => {
@@ -64,6 +65,30 @@ function App() {
       })
     );
   }, []);
+
+  
+
+  let menuRef = useRef();
+  useEffect(() => {
+    let handler = (e) => {
+      if(!menuRef.current.contains(e.target)){
+        closeAll();
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return() => {
+      document.removeEventListener('mousedown', handler);
+    }
+  });
+
+
+   function closeAll() {
+    setShowss(false);
+    const handleAllShow = columns.map((column) => {
+    return { ...column, show: false,pick: false, highlight: false, called:false };
+    });
+    setColumns(handleAllShow);
+  };
 
   function DropItem(id) {
     onClick2();
@@ -104,10 +129,9 @@ function App() {
   }
 
   function AddItem(id , valueCollected, count) { 
-    console.log(count);
     const updatedTables = columns.map((column) => {
       if (id === column.id) {
-        return { ...column, tables: valueCollected, called:false, count: count + 1};
+        return { ...column, tables: valueCollected, called:false, count: count + 1, highlight:false };
       }
       return column;
     });
@@ -241,6 +265,8 @@ function App() {
     setColumns(specifiedInput);
   }
 
+
+
    function closeInput() {
     const closeAllInput = columns.map(column => {
       return {...column, called:false}
@@ -250,8 +276,9 @@ function App() {
   
 
   return (
-    <div className="body">
-      <div className="drop-down">
+    <div className="body" >
+      <div className="drop-down" >
+        <div ref={menuRef} className='total-column'>
         {columns.map((column) => {
           return (
             <Column
@@ -274,10 +301,12 @@ function App() {
               AddItem={AddItem}
               tables = {column.tables}
               openInput ={openInput}
-             closeInput = {closeInput}
+              closeInput = {closeInput}
+              closeAll= {closeAll}
             />
           );
         })}
+        </div>
 
         {dropDown ? (
           <DropDownItem
@@ -287,9 +316,10 @@ function App() {
             handleShowss={handleShowss}
             showss={showss}
             hideShowss={hideShowss}
+    
           />
         ) : (
-          <button onClick={onClick1} className="add-button">
+          <button onClick={onClick1} className="add-button" >
             +
           </button>
         )}

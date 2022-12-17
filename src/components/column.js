@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import Issues from "./Issues";
 import { HiOutlineArchive } from "react-icons/hi";
 import { BiHide } from "react-icons/bi";
@@ -23,27 +23,61 @@ function Column(props) {
     });
   }, [props.tables]);
 
-  function section(id, pick, selection) {
-    const handleAllShow = issue.map((issue) => {
+  function section(id) {
+    const handleAll = issue.map((issue) => {
       if (id === issue.id) {
         return { ...issue, selection: true };
-      } 
-      return { ...issue, selection: false };
+      }
+      return { ...issue };
     });
-    setIssue(handleAllShow);
+    setIssue(handleAll);
   }
 
-  function section2(id, pick, selection) {
-    const handleAllShow = issue.map((issue) => {
+  function section2(id, pick) {
+    const handleAll = issue.map((issue) => {
       if (id === issue.id && pick === true) {
-        return { ...issue, selection: true };
-      } else{
-      return { ...issue, selection: false }};
+        return { ...issue, selection: true, pick: true };
+      } else if (id === issue.id && pick === false) {
+        return { ...issue, selection: false, pick: false };
+      }
+      return { ...issue };
     });
-    setIssue(handleAllShow);
+    setIssue(handleAll);
   }
 
-  function DropItem2(id, pick, selection) {
+
+ let menuRef = useRef();
+  useEffect(() => {
+    let handler = (e) => {
+      if (!menuRef.current.contains(e.target)) {
+        closeAll();
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => {
+      document.removeEventListener("mousedown", handler);
+    };
+  });
+
+  function closeAll() {
+    const handleAllShow = issue.map((issue) => {
+      return { ...issue, pick: false, selection:false };
+    });
+    setIssue(handleAllShow);
+  }  
+
+  
+  function closeAll2(id) {
+    const handleAll = issue.map((issue) => {
+      if (id === issue.id) {
+        return { ...issue, selection: true, pick:false };
+      }
+      return { ...issue, selection : false, pick: false };
+    });
+    setIssue(handleAll);
+  }
+
+  function DropItem2(id) {
     const handleAllShow = issue.map((issue) => {
       if (id === issue.id) {
         return { ...issue, pick: !issue.pick };
@@ -91,7 +125,6 @@ function Column(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     props.updateColumn(props.id, name);
-    console.log("form submitted");
   };
 
   return props.show ? (
@@ -116,10 +149,15 @@ function Column(props) {
               </form>{" "}
               &nbsp;
             </div>
-            <div className="count">{props.count}</div>
+            <div className="count" onClick={props.closeAll}>
+              {props.count}
+            </div>
           </div>
-          <div className="drop-down4" >
-            <div className="toggle" onClick={props.onClick}>...</div>
+          <div className="middle" onClick={props.closeAll}></div>
+          <div className="drop-down4">
+            <div className="toggle" onClick={props.onClick}>
+              ...
+            </div>
             <div className="list-drop-down" style={style2}>
               <div className="list-drop-down2">
                 <div className="list1" onClick={handleShow}>
@@ -147,7 +185,7 @@ function Column(props) {
             </div>
           </div>
         </div>
-        <div className="main-section">
+        <div className="main-section" onClick={props.closeAll}>
           <div>
             {issue.map((issue) => {
               return (
@@ -160,6 +198,7 @@ function Column(props) {
                   selection={issue.selection}
                   section={section}
                   section2={section2}
+                  menuRef={menuRef}
                 />
               );
             })}
@@ -187,12 +226,17 @@ function Column(props) {
         <div className="new-column1">
           <div className="new-column2">
             <div className="rename" onClick={handleShow}>
-              {props.name} &nbsp;
+              {props.name} <p></p> &nbsp;
             </div>
-            <div className="count">{props.count}</div>
+            <div className="count" onClick={props.closeAll}>
+              {props.count}
+            </div>
           </div>
+          <div className="middle" onClick={props.closeAll}></div>
           <div className="drop-down4">
-            <div className="toggle" onClick={props.onClick}>...</div>
+            <div className="toggle" onClick={props.onClick}>
+              ...
+            </div>
             <div className="list-drop-down" style={style2}>
               <div className="list-drop-down2">
                 <div className="list1" onClick={handleShow}>
@@ -219,8 +263,9 @@ function Column(props) {
             </div>
           </div>
         </div>
-        <div className="main-section">
+        <div className="main-section" onClick={props.closeAll}>
           <div>
+            <div ref={menuRef}>
             {issue.map((issue) => {
               return (
                 <Issues
@@ -232,9 +277,14 @@ function Column(props) {
                   selection={issue.selection}
                   section={section}
                   section2={section2}
+                  menuRef={menuRef}
+                  closeAll={closeAll}
+                  closeAll2={closeAll2}
                 />
               );
             })}
+            </div>
+          
 
             <div className="issues" style={style4}></div>
           </div>

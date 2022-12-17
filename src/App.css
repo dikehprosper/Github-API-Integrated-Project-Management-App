@@ -9,17 +9,21 @@ body {
   width: 100%;
   overflow-x: auto;
   position: relative;
-  
+
 }
 
 .drop-down {
 
   display: flex;
   flex-direction: row;
-  padding: 10px;
+  margin: 10px;
   position: relative;
 
+}
 
+.total-column {
+  display: flex;
+  flex-direction: row;
 }
 
 .form-input {
@@ -49,7 +53,7 @@ body {
   border: 1px solid grey;
   border-radius: 6px;
   max-height: 480px;
-  flex:1;
+  flex: 1;
   width: 120px;
 }
 
@@ -66,7 +70,7 @@ body {
   border: 1px solid grey;
   border-radius: 6px;
   max-height: 480px;
-  flex:1;
+  flex: 1;
   color: white;
   font-weight: bold;
   font-size: 15px;
@@ -148,19 +152,31 @@ button.add-button:hover {
   justify-content: center;
   align-items: center;
   font-size: 12px;
+  margin-left: 5px;
 }
 
+.middle {
+display: flex;
+  height: 25px;
+  grid-template-columns: 1fr;
+  width: 100%;
+}
 .new-column1 {
   display: flex;
+  width: 100%;
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
+  height: 25px;
+  flex: 1;
+  justify-content: space-between;
 }
 
 .new-column2 {
   display: flex;
   flex-direction: row;
   align-items: center;
+  align-items: center;
+  height: 25px;
 }
 
 .add-item {
@@ -281,6 +297,7 @@ button.add-button:hover {
   border-radius: 10px;
   display: grid;
   gap: 2px;
+  z-index:100;
 }
 
 .list-drop-down2 {
@@ -293,6 +310,7 @@ button.add-button:hover {
   background-color: rgb(32, 30, 30);
   border-radius: 9px 9px 9px 9px;
   display: grid;
+  gap:2px;
 }
 
 .list-drop-down3 {
@@ -370,12 +388,16 @@ button.add-button:hover {
 }
 
 
+
+
 .bold {
   font-weight: bold;
 }
 
 .rename {
   cursor: pointer;
+  height: 25px;
+  white-space: nowrap;
 }
 
 .rename:hover {
@@ -412,17 +434,58 @@ button.add-button:hover {
   height: 100%;
   border-right: 1px solid grey;
   width: 40px;
-  height: 100%;
   display: flex;
   flex-direction: row;
   align-content: center;
   justify-content: center;
+  position: relative;
 }
 
-.design2:hover {
-  background: rgba(128, 128, 128, 0.24);
-  ;
+.design6 {
+  font-size: 22px;
+  height: 100%;
+  width: 40px;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: center;
+  position: relative;
 }
+
+.design6:hover {
+  background: rgba(128, 128, 128, 0.24);
+}
+
+.plus-item {
+  position: absolute;
+  background: rgba(128, 128, 128);
+  width: 1000%;
+  left: 100%;
+  bottom: 103%;
+  padding: 1px;
+  border-radius: 5px;
+}
+
+.plus-item2a {
+  font-size: 13px;
+  padding: 12px 12px;
+  background: #1f252e;
+  border-radius: 5px 5px 0px 0px;
+  margin-bottom: 1px;
+  cursor: pointer;
+}
+.plus-item2b {
+  font-size: 13px;
+  padding: 12px 12px;
+  background: #1f252e;
+  border-radius: 0px 0px 5px 5px ;
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+  flex-direction: row;
+  cursor: pointer;
+}
+
 
 .design3 {
   padding: 10px 0px;
@@ -474,7 +537,7 @@ button.add-button:hover {
   margin-top: 5px;
   height: 7px;
   background: #dbdde075;
-  
+
 }
 
 .issues1 {
@@ -487,18 +550,19 @@ button.add-button:hover {
   display: grid;
   grid-template-columns: 1fr;
   font-weight: 450;
-font-size: 13px;
+  font-size: 13px;
 
 }
 
 .issues2 {
-display: flex;
-flex-direction: row;
-padding-left: 15px;
-align-items: center;
-height: 30px;
+  display: flex;
+  flex-direction: row;
+  padding-left: 15px;
+  align-items: center;
+  height: 30px;
 
 }
+
 input {
   background: #090f1a;
 }

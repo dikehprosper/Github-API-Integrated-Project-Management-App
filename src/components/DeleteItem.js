@@ -32,14 +32,14 @@ function DeleteItem(props) {
           {props.id === 3 ? (
             <>
               {" "}
-              This will delete the "Status" option
+              This will delete the "Status" option &nbsp;
               <span className="bold">"{props.name}"</span>. This update will
               remove the option used in 2 workflows. Continuing will disable the
               workflows, and invalidate the actions containing this option.
             </>
           ) : (
             <>
-              This will delete the "Status" option
+              This will delete the "Status" option &nbsp;
               <span className="bold">"{props.name}"</span>.
             </>
           )}
