@@ -66,6 +66,19 @@ function App() {
     );
   }, []);
 
+  function newColumns(name) {
+    const newColumns = {
+      name: name,
+      id: nanoid(),
+      select: true,
+      pick: false,
+      show: false,
+      called: false,
+      highlight: false,
+      count: 0,
+    };
+    setColumns([...columns, newColumns]);
+  }
   
 
   let menuRef = useRef();
@@ -128,30 +141,17 @@ function App() {
     setColumns(deleteSpecificItem);
   }
 
-  function AddItem(id , valueCollected, count) { 
+  function AddItem(id) { 
     const updatedTables = columns.map((column) => {
       if (id === column.id) {
-        return { ...column, tables: valueCollected, called:false, count: count + 1, highlight:false };
+        return { ...column, called:false, highlight:false };
       }
       return column;
     });
     setColumns(updatedTables);
   }
                                 
-  function newColumns(name) {
-    const newColumns = {
-      name: name,
-      id: nanoid(),
-      select: true,
-      pick: false,
-      show: false,
-      called: false,
-      highlight: false,
-      tables: "",
-      count: 0,
-    };
-    setColumns([...columns, newColumns]);
-  }
+  
 
   function updateColumn(id, name) {
     const updatedColumns = columns.map((column) => {

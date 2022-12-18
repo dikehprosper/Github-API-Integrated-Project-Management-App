@@ -3,49 +3,22 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { AiOutlineDelete } from "react-icons/ai";
 
-
 function DeleteItem2(props) {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-/*   function deleteSpecificItem(id) {
-    const deleteSpecificItem = columns.filter((column) => id !== column.id);
-
-    setColumns(deleteSpecificItem);
-  }
-
-  function DropItem(id) {
-    onClick2();
-    closeInput();
-    setColumns((column) =>
-      column.map((column) => {
-        return id === column.id
-          ? {
-              ...column,
-              pick: !column.pick,
-              highlight: false,
-              show: false,
-              called: false,
-            }
-          : {
-              ...column,
-              show: false,
-              pick: false,
-              highlight: false,
-              called: false,
-            };
-      })
-    );
-  } */
+  const deleteItem2 = () => {
+    handleClose();
+    props.deleteItem2(props.id, props.tables, props.selection2);
+  };
 
   return (
     <>
       <div
         className="list4"
         onClick={() => {
-          props.onClick();
           handleShow();
         }}
       >
@@ -65,7 +38,7 @@ function DeleteItem2(props) {
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={handleClose}>Close</Button>
-          <Button onClick={props.DeleteItem}>Delete</Button>
+          <Button onClick={deleteItem2}>Delete</Button>
         </Modal.Footer>
       </Modal>
     </>

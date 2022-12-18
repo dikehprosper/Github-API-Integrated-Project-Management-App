@@ -50,7 +50,8 @@ function AddItem(props) {
                   className="design5"
                   onSubmit={(e) => {
                     e.preventDefault();
-                    props.AddItem(props.id, valueCollected, props.count);
+                    props.AddItem(props.id);
+                    props.newIssue(valueCollected);
                     setValueCollected("");
                   }}
                 >
@@ -79,7 +80,8 @@ function AddItem(props) {
                   className="design5"
                   onSubmit={(e) => {
                     e.preventDefault();
-                    props.AddItem(props.id, valueCollected, props.count);
+                    props.AddItem(props.id, props.count);
+                    props.newIssue(valueCollected);
                     setValueCollected("");
                   }}
                 >

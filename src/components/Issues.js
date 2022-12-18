@@ -6,7 +6,7 @@ import { VscIssueDraft } from "react-icons/vsc";
 
 function Issues(props) {
   const style3 = {
-    display: props.tables === "" ? "none" : "grid",
+    display: props.selection2 ? "none" : "grid",
     border: props.selection ? "1px solid grey" : "none",
   };
 
@@ -34,8 +34,8 @@ function Issues(props) {
 
   return (
     <div
+    style={style3}
       className="issues1"
-      style={style3}
       onMouseEnter={section}
           onMouseLeave={section2}
     >
@@ -51,7 +51,6 @@ function Issues(props) {
         >
           <div
             className="toggle2"
-
           >
             ...
           </div>
@@ -69,7 +68,12 @@ function Issues(props) {
                 <HiOutlineArchive className="icons" /> Archive
               </div>
 
-              <DeleteItem2 />
+              <DeleteItem2 
+              id={props.id}
+              deleteItem2= {props.deleteItem2}
+              selection2={props.selection2}
+              tables={props.tables}
+              />
             </div>
           </div>
         </div>

@@ -11,17 +11,46 @@ function Column(props) {
   const [name, setName] = React.useState(props.name);
   const [issue, setIssue] = React.useState([]);
 
-  useEffect(() => {
+ /*  useEffect(() => {
+    let issue =[ 
+  ];
+    setIssue(
+      issue.map((issue) => {
+        return {
+          pick: false,
+          id: issue.id,
+          selection: false,
+          tables: issue.tables,
+        };
+      })
+    );
+  }, []); */
+
+  function newIssue(valueCollected) {
     const newIssue = {
-      id: nanoid(),
-      tables: props.tables,
       pick: false,
+      id:nanoid(),
       selection: false,
+      tables: valueCollected,
+      selection2: false,
     };
-    setIssue((prevState) => {
-      return [...prevState, newIssue];
+   
+    setIssue([...issue, newIssue]);
+  }
+
+  const count = issue.length;
+
+  function deleteItem2(id, value, selection2) {
+    console.log(props.id,selection2);
+    const handleAll = issue.map((issue) => {
+      if (id === issue.id) {
+        return { ...issue, selection2: true };
+      }
+      return issue;
     });
-  }, [props.tables]);
+    setIssue(handleAll);
+  }
+  
 
   function section(id) {
     const handleAll = issue.map((issue) => {
@@ -196,9 +225,13 @@ function Column(props) {
                   pick={issue.pick}
                   DropItem2={DropItem2}
                   selection={issue.selection}
+                  selection2={issue.selection2}
                   section={section}
                   section2={section2}
                   menuRef={menuRef}
+                  closeAll={closeAll}
+                  closeAll2={closeAll2}
+                  deleteItem2={deleteItem2}
                 />
               );
             })}
@@ -218,6 +251,7 @@ function Column(props) {
         AddItem={props.AddItem}
         closeInput={props.closeInput}
         count={props.count}
+        newIssue={newIssue}
       />
     </div>
   ) : (
@@ -229,7 +263,7 @@ function Column(props) {
               {props.name} <p></p> &nbsp;
             </div>
             <div className="count" onClick={props.closeAll}>
-              {props.count}
+              {count}
             </div>
           </div>
           <div className="middle" onClick={props.closeAll}></div>
@@ -275,11 +309,13 @@ function Column(props) {
                   pick={issue.pick}
                   DropItem2={DropItem2}
                   selection={issue.selection}
+                  selection2={issue.selection2}
                   section={section}
                   section2={section2}
                   menuRef={menuRef}
                   closeAll={closeAll}
                   closeAll2={closeAll2}
+                  deleteItem2={deleteItem2}
                 />
               );
             })}
@@ -302,6 +338,7 @@ function Column(props) {
         AddItem={props.AddItem}
         closeInput={props.closeInput}
         count={props.count}
+        newIssue={newIssue}
       />
     </div>
   );
