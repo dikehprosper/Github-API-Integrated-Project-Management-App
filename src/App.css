@@ -48,6 +48,7 @@ body {
 
 
 
+
 .create-column-section {
   padding: 10px;
   border: 1px solid grey;
@@ -156,11 +157,12 @@ button.add-button:hover {
 }
 
 .middle {
-display: flex;
+  display: flex;
   height: 25px;
   grid-template-columns: 1fr;
   width: 100%;
 }
+
 .new-column1 {
   display: flex;
   width: 100%;
@@ -251,6 +253,12 @@ display: flex;
 
 .toggle2 {
   margin-top: 7px;
+  display: flex;
+  height: 23px;
+  width: 23px;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 
 .drop-down4:active {
@@ -297,8 +305,41 @@ display: flex;
   border-radius: 10px;
   display: grid;
   gap: 2px;
-  z-index:100;
+  z-index: 100;
+  white-space: nowrap;
 }
+
+.list-drop-down4-1 {
+  min-width: 190px;
+  height: 80px;
+  background: rgba(128, 128, 128, 0.411);
+  border: 1px solid grey;
+  position: absolute;
+  top: 35px;
+  left: 5px;
+  border-radius: 10px;
+  display: grid;
+  gap: 2px;
+  z-index: 100;
+  white-space: nowrap;
+}
+
+.list-drop-down41 {
+  min-width: 190px;
+  height: 120px;
+  background: rgba(128, 128, 128, 0.411);
+  border: 1px solid grey;
+  position: absolute;
+  top: 35px;
+  left: 5px;
+  border-radius: 10px;
+  display: grid;
+  gap: 2px;
+  z-index: 5;
+  overflow-y: scroll;
+  white-space: nowrap;
+}
+
 
 .list-drop-down2 {
   background-color: rgb(32, 30, 30);
@@ -310,7 +351,8 @@ display: flex;
   background-color: rgb(32, 30, 30);
   border-radius: 9px 9px 9px 9px;
   display: grid;
-  gap:2px;
+  gap: 2px;
+  padding-top: 3px;
 }
 
 .list-drop-down3 {
@@ -385,6 +427,14 @@ display: flex;
   width: 15px;
   height: 15px;
   margin-right: 10px;
+}
+
+.icons-1 {
+  width: 15px;
+  height: 15px;
+  margin-right: 5px;
+  color: green;
+  font-weight: bold;
 }
 
 
@@ -474,11 +524,12 @@ display: flex;
   margin-bottom: 1px;
   cursor: pointer;
 }
+
 .plus-item2b {
   font-size: 13px;
   padding: 12px 12px;
   background: #1f252e;
-  border-radius: 0px 0px 5px 5px ;
+  border-radius: 0px 0px 5px 5px;
   display: flex;
   justify-content: space-between;
   align-content: center;
@@ -559,9 +610,85 @@ display: flex;
   padding-left: 15px;
   align-items: center;
   height: 30px;
+}
+
+
+
+.form-input-username1{
+  display: grid;
+  justify-content: center;
+  grid-template-columns: 1fr 40px;
+  align-items: center;max-width: 350px;
+  margin-left: 10px;
+  height: 50px;
+}
+
+
+.form-input-username2 {
+  color: white;
+  border: 1px solid grey;
+  padding: 5px;
+  margin: 15px 5px 10px 15px;
+  border-radius: 3px;
+  width: 150px;
+  display: flex; 
+  flex-direction: row;
+  width: 300px;
+  background: black;
+}
+
+.form-input-username3 {
+  width: 80px; 
+  padding: 5px;
+  margin-top: 2px;
+  background: white;
+  border-radius: 0px 3px 3px 0px;
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  align-items: center;
+  font-weight: bold;
+  margin-left: -15px;
+  margin-top: 4px;
+  border: 1px solid grey;
+};
+
+.api-data {
+  overflow-y: hidden;
+  overflow-y: scroll;
+};
+
+
+.list-drop-down51 {
+  border-bottom: 1px solid rgb(202, 6, 6);
+  padding-left: 14px !important;
+  font-size: 13px;
+  background: red;
+  color: red;
+  height: 50px !important;
+  width: 60px;
+  z-index: 30;
+};
+
+.list-drop-down5:hover {
+background: #1f252e;
+}
+
+.span1 {
+  color: rgb(19, 245, 19);
+  margin-right: 5px;
+}
+
+.list5 {
+  padding-left: 10px;
+  display: grid;
+  grid-template-columns: 1fr;
+  height: 20px;
+  margin-bottom: 1px solid rgb(252, 252, 252);
+
 
 }
 
-input {
-  background: #090f1a;
-}
+.list5:hover {
+  background: rgba(128, 128, 128, 0.24) ;
+};

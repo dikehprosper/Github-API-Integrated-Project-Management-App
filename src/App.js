@@ -1,18 +1,32 @@
 import "./App.css";
 import DropDownItem from "./components/DropDownItem";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Column from "./components/column";
 import { nanoid } from "nanoid";
 
 function App() {
-  const [dropDown, setDropDown] = React.useState(false);
-  const [showss, setShowss] = React.useState(false);
+  const [dropDown, setDropDown] = useState(false);
+  const [showss, setShowss] = useState(false);
+  const [userName, setUserName] = useState("");
+  const [repoName, setRepoName] = useState("");
+  const [apiKey, setApiKey] = useState("");
+  const [savedUserName, setSavedUserName] = useState(false);
+  const [savedApiKey, setSavedApiKey] = useState(false);
 
+  /*   useEffect(() => {
+    console.log('this is' + userName)
+  }, [userName]) */
 
   const handleShowss = () => {
     setShowss(true);
     const handleAllShow = columns.map((column) => {
-      return { ...column, show: false, pick: false, highlight: false, called:false };
+      return {
+        ...column,
+        show: false,
+        pick: false,
+        highlight: false,
+        called: false,
+      };
     });
     setColumns(handleAllShow);
   };
@@ -22,7 +36,13 @@ function App() {
   const onClick1 = () => {
     setDropDown(true);
     const handleAllShow = columns.map((column) => {
-      return { ...column, show: false, pick: false, highlight: false, called:false };
+      return {
+        ...column,
+        show: false,
+        pick: false,
+        highlight: false,
+        called: false,
+      };
     });
     setColumns(handleAllShow);
   };
@@ -31,8 +51,7 @@ function App() {
     setDropDown(false);
   };
 
- 
-  const [columns, setColumns] = React.useState([]);
+  const [columns, setColumns] = useState([]);
 
   useEffect(() => {
     let columns = [
@@ -77,39 +96,56 @@ function App() {
       highlight: false,
       count: 0,
     };
-    setColumns([...columns, newColumns]);
+    columns.push(newColumns);
+    setColumns([...columns]);
   }
-  
 
   let menuRef = useRef();
   useEffect(() => {
     let handler = (e) => {
-      if(!menuRef.current.contains(e.target)){
+      if (!menuRef.current.contains(e.target)) {
         closeAll();
       }
     };
-    document.addEventListener('mousedown', handler);
-    return() => {
-      document.removeEventListener('mousedown', handler);
-    }
+    document.addEventListener("mousedown", handler);
+    return () => {
+      document.removeEventListener("mousedown", handler);
+    };
   });
 
-
-   function closeAll() {
+  function closeAll() {
     setShowss(false);
     const handleAllShow = columns.map((column) => {
-    return { ...column, show: false,pick: false, highlight: false, called:false };
+      return {
+        ...column,
+        show: false,
+        pick: false,
+        highlight: false,
+        called: false,
+      };
     });
     setColumns(handleAllShow);
-  };
+  }
 
   function DropItem(id) {
     onClick2();
     setColumns((column) =>
       column.map((column) => {
         return id === column.id
-          ? { ...column, pick: !column.pick, highlight: false, called:false, show: false}
-          : { ...column, show: false, pick: false, highlight: false, called:false  };
+          ? {
+              ...column,
+              pick: !column.pick,
+              highlight: false,
+              called: false,
+              show: false,
+            }
+          : {
+              ...column,
+              show: false,
+              pick: false,
+              highlight: false,
+              called: false,
+            };
       })
     );
   }
@@ -128,9 +164,21 @@ function App() {
     setShowss(false);
     const handleAllShow = columns.map((column) => {
       if (id === column.id) {
-        return { ...column, show: true, highlight: false,pick: false, called:false};
+        return {
+          ...column,
+          show: true,
+          highlight: false,
+          pick: false,
+          called: false,
+        };
       }
-      return { ...column, show: false,pick: false, highlight: false, called:false };
+      return {
+        ...column,
+        show: false,
+        pick: false,
+        highlight: false,
+        called: false,
+      };
     });
     setColumns(handleAllShow);
   }
@@ -141,17 +189,15 @@ function App() {
     setColumns(deleteSpecificItem);
   }
 
-  function AddItem(id) { 
+  function AddItem(id) {
     const updatedTables = columns.map((column) => {
       if (id === column.id) {
-        return { ...column, called:false, highlight:false };
+        return { ...column, called: false, highlight: false };
       }
       return column;
     });
     setColumns(updatedTables);
   }
-                                
-  
 
   function updateColumn(id, name) {
     const updatedColumns = columns.map((column) => {
@@ -196,7 +242,6 @@ function App() {
                       if (d.id === data.id) {
                         data.select = checked;
                       }
-
                       return data;
                     })
                   );
@@ -252,60 +297,139 @@ function App() {
     );
   }
 
-  
-  
   function openInput(id) {
     setShowss(false);
-    const specifiedInput = columns.map(column => {
-      if (id === column.id){
-        return {...column, called:true, highlight: true, pick:false, show: false}
+    const specifiedInput = columns.map((column) => {
+      if (id === column.id) {
+        return {
+          ...column,
+          called: true,
+          highlight: true,
+          pick: false,
+          show: false,
+        };
+      }
+      return {
+        ...column,
+        pick: false,
+        called: false,
+        highlight: false,
+        pick: false,
+        show: false,
       };
-      return {...column, pick:false, called:false, highlight: false, pick:false, show: false}
     });
     setColumns(specifiedInput);
   }
 
-
-
-   function closeInput() {
-    const closeAllInput = columns.map(column => {
-      return {...column, called:false}
+  function closeInput() {
+    const closeAllInput = columns.map((column) => {
+      return { ...column, called: false };
     });
     setColumns(closeAllInput);
   }
+
+  function saveUserName() {
+    newUserName();
+    setSavedUserName(true);
+  }
+  function newUserName() {
+    setUserName(userName);
+  }
+
   
+  function saveApiKey() {
+    newApiKey();
+    setSavedApiKey(true);
+  }
+  function newApiKey() {
+    setApiKey(apiKey);
+  }
+
 
   return (
-    <div className="body" >
-      <div className="drop-down" >
-        <div ref={menuRef} className='total-column'>
-        {columns.map((column) => {
-          return (
-            <Column
-              key={column.id}
-              id={column.id}
-              name={column.name}
-              select={column.select}
-              pick={column.pick}
-              count ={column.count}
-              called={column.called}
-              highlight={column.highlight}
-              show={column.show}
-              onClick={() => DropItem(column.id)}
-              updateColumn={updateColumn}
-              hideSpecificColumn={hideSpecificColumn}
-              handleAllShow={handleAllShow}
-              deleteSpecificItem={deleteSpecificItem}
-              Hidden={Hidden}
-              Visible={Visible}
-              AddItem={AddItem}
-              tables = {column.tables}
-              openInput ={openInput}
-              closeInput = {closeInput}
-              closeAll= {closeAll}
-            />
-          );
-        })}
+    <div className="body">
+      <div>
+      <div className="form-input-username1">
+        {" "}
+        <div>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              saveUserName();
+            }}
+          >
+            <div className="">
+              <input
+                autoFocus
+                className="form-input-username2"
+                id="name"
+                placeholder="Enter your username"
+                type="text"
+                value={userName}
+                onChange={(e) => {
+                  setUserName(e.target.value);
+                }}
+              />
+            </div>
+          </form>
+        </div>
+        <div className="form-input-username3" onClick={saveUserName} >
+          {savedUserName ? "saved" : "save"}
+        </div>
+      </div>
+
+      <div className="form-input-username1">
+        {" "}
+        <div>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              saveApiKey();
+            }}
+          >
+            <div className="">
+              <input
+                autoFocus
+                className="form-input-username2"
+                id="api key"
+                placeholder="Enter your Api-key"
+                type="text"
+                value={apiKey}
+                onChange={(e) => {
+                  setApiKey(e.target.value);
+                }}
+              />
+            </div>
+          </form>
+        </div>
+        <div className="form-input-username3" onClick={saveApiKey} >
+          {savedApiKey ? "saved" : "save"}
+        </div>
+      </div>
+</div>
+      <div className="drop-down">
+        <div ref={menuRef} className="total-column">
+          {columns.map((column) => {
+            return (
+              <Column
+                key={column.id}
+                {...column}
+                onClick={() => DropItem(column.id)}
+                updateColumn={updateColumn}
+                hideSpecificColumn={hideSpecificColumn}
+                handleAllShow={handleAllShow}
+                deleteSpecificItem={deleteSpecificItem}
+                Hidden={Hidden}
+                Visible={Visible}
+                AddItem={AddItem}
+                openInput={openInput}
+                closeInput={closeInput}
+                closeAll={closeAll}
+                userName={userName}
+                apiKey={apiKey}
+              />
+            );
+          })}
         </div>
 
         {dropDown ? (
@@ -316,15 +440,13 @@ function App() {
             handleShowss={handleShowss}
             showss={showss}
             hideShowss={hideShowss}
-    
           />
         ) : (
-          <button onClick={onClick1} className="add-button" >
+          <button onClick={onClick1} className="add-button">
             +
           </button>
         )}
       </div>
-      
     </div>
   );
 }

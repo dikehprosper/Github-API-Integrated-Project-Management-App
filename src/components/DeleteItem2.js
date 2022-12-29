@@ -11,7 +11,7 @@ function DeleteItem2(props) {
 
   const deleteItem2 = () => {
     handleClose();
-    props.deleteItem2(props.id, props.tables, props.selection2);
+    // props.deleteItem2(props.id);
   };
 
   return (
