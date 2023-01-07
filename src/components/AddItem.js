@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { VscIssueDraft } from "react-icons/vsc";
 import { RiGitRepositoryLine } from "react-icons/ri";
 import { BsArrowRightShort } from "react-icons/bs";
@@ -18,12 +18,16 @@ function AddItem(props) {
     setPlusItem(false);
   };
 
+function newIssue(){
+  props.AddItem(props.id);
+ props.newIssue(props.id, valueCollected);
+}
 
 
   return (
-    <>
+    <div className="design1-1">
       {props.called ? (
-        <div className="design1" ref={props.menuRef}>
+        <div className="design1">
           {focused ? (
             <>
               {plusItem ? (
@@ -56,8 +60,7 @@ function AddItem(props) {
                       className="design5"
                       onSubmit={(e) => {
                         e.preventDefault();
-                        props.AddItem(props.id);
-                        props.newIssue(valueCollected);
+                        newIssue();
                         setValueCollected("");
                       }}
                     >
@@ -89,8 +92,7 @@ function AddItem(props) {
                       className="design5"
                       onSubmit={(e) => {
                         e.preventDefault();
-                        props.AddItem(props.id, props.count);
-                        props.newIssue(valueCollected);
+                        newIssue();
                         setValueCollected("");
                       }}
                     >
@@ -121,7 +123,7 @@ function AddItem(props) {
           )}
         </div>
       ) : null}
-    </>
+    </div>
   );
 }
 export default AddItem;

@@ -5,6 +5,7 @@ import { HiOutlineArchive } from "react-icons/hi";
 import { VscIssueDraft } from "react-icons/vsc";
 import { Octokit } from "@octokit/rest";
 import Items from "./Items";
+import { Draggable, Droppable } from "react-beautiful-dnd";
 
 function Issues(props) {
   const style3 = {
@@ -29,9 +30,13 @@ function Issues(props) {
     fetchRepos();
   }, [props.userName]);
 
+  /*   useEffect(() => {
+    console.log(items);
+  }, [items]); */
+
   const apiKey =
     props.apiKey === ""
-      ? "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"
+      ? "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"
       : props.apiKey;
 
   const octokit = new Octokit({
@@ -41,6 +46,7 @@ function Issues(props) {
   const owner = props.userName === "" ? "Dikeprosper123" : props.userName;
 
   const postIssue = async (id) => {
+    props.closeAll2(props.id, props.columnId);
     const repo = items.map((item) => {
       if (id === item.id) {
         console.log(item.name);
@@ -56,27 +62,27 @@ function Issues(props) {
       })
       .then((res) => {
         if (res.status == 201) {
+          console.log(res.data);
           setIssueNumber(res.data.number);
           setIssueCreated(false);
           setCurrentRepoName(repo);
-          alert(`issue created at ${res.data.repository_URL}`);
+          alert(`issue created at ${res.data.repository_url}`);
         } else {
           alert(`something went wrong. Response: ${JSON.stringify(res)}`);
         }
       });
-    // console.log(res.data.id);
   };
 
   function showRepositories() {
-    setShownRepositories(false);
+    props.showRepositories(props.id, props.columnId);
   }
 
   function section() {
-    props.section(props.id);
+    props.section(props.id, props.columnId);
   }
 
   function section2() {
-    props.section2(props.id, props.pick);
+    props.section2(props.id, props.pick, props.columnId);
   }
 
   const style6 = {
@@ -91,148 +97,189 @@ function Issues(props) {
     background: props.selection ? "rgba(128, 128, 128, 0.411)" : "transparent",
   };
 
-  console.log(shownRepositories, props.pick);
-
-  /*    const style9 = {
-    display: props.shownRepositories ? "none" : "grid",
-  };  */
+  function onDragEnd() {
+    props.onDragEnd(props.id);
+  }
 
   return (
-    <>
-      {issueCreated ? (
+    <Draggable key={props.id} draggableId={`${props.id}`} index={props.index}>
+      {(draggableProvided, draggableSnapshot) => (
         <div
-          style={style3}
-          className="issues1"
-          onMouseEnter={section}
-          onMouseLeave={section2}
+          ref={draggableProvided.innerRef}
+          {...draggableProvided.draggableProps}
+          {...draggableProvided.dragHandleProps}
         >
-          <div className="issues2">
-            <VscIssueDraft className="icons" /> Draft
-            <div className="drop-down5" style={style6} onMouseEnter={section}>
-              <div
-                className="toggle2"
-                onClick={() => {
-                  props.dropItem2(props.id, props.pick, props.selection);
-                  setShownRepositories(true);
-                }}
-              >
-                ...
-              </div>
-
-              {shownRepositories ? (
-                <div className="list-drop-down4" style={style7}>
-                  <div className="list-drop-down5">
-                    <div
-                      className="list1"
-                      style={style8}
-                      onClick={showRepositories}
-                    >
-                      {" "}
-                      <MdDriveFileRenameOutline className="icons" /> Convert to
-                      issue
-                    </div>
-                    <div className="list2">
-                      {" "}
-                      <HiOutlineArchive className="icons" /> Archive
-                    </div>
-                    <DeleteItem2
-                      id={props.id}
-                      deleteItem2={props.deleteItem2}
-                      selection2={props.selection2}
-                      tables={props.tables}
-                    />
-                  </div>
+          {issueCreated ? (
+            <div
+              style={style3}
+              className="issues1"
+              onMouseEnter={section}
+              onMouseLeave={section2}
+            >
+              <div className="issues2">
+                <div
+                  className="issue-name"
+                  onClick={() => {
+                    props.closeAll2(props.id, props.columnId);
+                  }}
+                >
+                  <VscIssueDraft className="icons" /> Draft
                 </div>
-              ) : (
-                <div className="list-drop-down41" style={style7}>
-                  <div className="list-drop-down5">
-                    <div>
-                      {items === "" ? (
-                        <>
+                <div
+                  className="drop-down5"
+                  style={style6}
+                  onMouseEnter={section}
+                >
+                  <div
+                    className="toggle2"
+                    onClick={() => {
+                      props.dropItem2(props.id, props.columnId);
+                    }}
+                  >
+                    ...
+                  </div>
+
+                  {props.shownRepositories ? (
+                    <div className="list-drop-down4" style={style7}>
+                      <div className="list-drop-down5">
+                        <div
+                          className="list1"
+                          style={style8}
+                          onClick={showRepositories}
+                        >
                           {" "}
-                          {items.map((item) => {
-                            return (
-                              <Items
-                                key={item.id}
-                                id={item.id}
-                                name={item.name}
-                                postIssue={postIssue}
-                              />
-                            );
-                          })}{" "}
-                        </>
-                      ) : (
-                        <>
-                    <span>Not connected!!</span>
-                           </>
-                      )}
+                          <MdDriveFileRenameOutline className="icons" /> Convert
+                          to issue
+                        </div>
+                        <div className="list2">
+                          {" "}
+                          <HiOutlineArchive className="icons" /> Archive
+                        </div>
+                        <DeleteItem2
+                          id={props.id}
+                          deleteItem2={props.deleteItem2}
+                          selection2={props.selection2}
+                          tables={props.tables}
+                          columnId={props.columnId}
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="list-drop-down41" style={style7}>
+                      <div className="list-drop-down5">
+                        <div>
+                          {items.length === 0 ? (
+                            <>
+                              <p>No items to display!!</p>
+                            </>
+                          ) : (
+                            <>
+                              {items.map((item) => {
+                                return (
+                                  <Items
+                                    key={item.id}
+                                    id={item.id}
+                                    name={item.name}
+                                    postIssue={postIssue}
+                                  />
+                                );
+                              })}
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                <div
+                  className="empty-space"
+                  onClick={() => {
+                    props.closeAll2(props.id, props.columnId);
+                  }}
+                ></div>
+              </div>
+
+              <div
+                className="issues2"
+                onClick={() => {
+                  props.closeAll2(props.id, props.columnId);
+                }}
+              >
+                {" "}
+                {props.tables}
+              </div>
+            </div>
+          ) : (
+            <div
+              style={style3}
+              className="issues1"
+              onMouseEnter={section}
+              onMouseLeave={section2}
+            >
+              <div className="issues2">
+                <div
+                  className="issue-name"
+                  onClick={() => {
+                    props.closeAll2(props.id, props.columnId);
+                  }}
+                >
+                  {" "}
+                  <VscIssueDraft className="icons-1" />{" "}
+                  <span className="span1">{currentRepoName}</span>{" "}
+                  <span>#{issueNumber}</span>
+                </div>
+                <div
+                  className="drop-down5"
+                  style={style6}
+                  onMouseEnter={section}
+                >
+                  <div
+                    className="toggle2"
+                    onClick={() => {
+                      props.dropItem2(props.id, props.columnId);
+                    }}
+                  >
+                    ...
+                  </div>
+                  <div className="list-drop-down4-1" style={style7}>
+                    <div className="list-drop-down5">
+                      <div className="list2">
+                        {" "}
+                        <HiOutlineArchive className="icons" /> Archive
+                      </div>
+
+                      <DeleteItem2
+                        id={props.id}
+                        deleteItem2={props.deleteItem2}
+                        selection2={props.selection2}
+                        tables={props.tables}
+                        columnId={props.columnId}
+                      />
                     </div>
                   </div>
                 </div>
-              )}
-            </div>
-          </div>
+                <div
+                  className="empty-space"
+                  onClick={() => {
+                    props.closeAll2(props.id, props.columnId);
+                  }}
+                ></div>
+              </div>
 
-          <div
-            className="issues2"
-            onClick={() => {
-              props.closeAll2(props.id);
-            }}
-          >
-            {" "}
-            {props.tables}
-          </div>
-        </div>
-      ) : (
-        <div
-          style={style3}
-          className="issues1"
-          onMouseEnter={section}
-          onMouseLeave={section2}
-        >
-          <div className="issues2">
-            <VscIssueDraft className="icons-1" />{" "}
-            <span className="span1">{currentRepoName}</span>{" "}
-            <span>#{issueNumber}</span>
-            <div className="drop-down5" style={style6} onMouseEnter={section}>
               <div
-                className="toggle2"
+                className="issues2"
                 onClick={() => {
-                  props.dropItem2(props.id, props.pick, props.selection);
+                  props.closeAll2(props.id, props.columnId);
                 }}
               >
-                ...
-              </div>
-              <div className="list-drop-down4-1" style={style7}>
-                <div className="list-drop-down5">
-                  <div className="list2">
-                    {" "}
-                    <HiOutlineArchive className="icons" /> Archive
-                  </div>
-
-                  <DeleteItem2
-                    id={props.id}
-                    deleteItem2={props.deleteItem2}
-                    selection2={props.selection2}
-                    tables={props.tables}
-                  />
-                </div>
+                {" "}
+                {props.tables}
               </div>
             </div>
-          </div>
-
-          <div
-            className="issues2"
-            onClick={() => {
-              props.closeAll2(props.id);
-            }}
-          >
-            {" "}
-            {props.tables}
-          </div>
+          )}
         </div>
       )}
-    </>
+    </Draggable>
   );
 }
 

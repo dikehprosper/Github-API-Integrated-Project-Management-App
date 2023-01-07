@@ -1,8 +1,9 @@
-body {
+.body {
   background-color: rgb(32, 30, 30);
+
 }
 
-.body {
+.body1 {
   background-color: rgb(32, 30, 30);
   height: 100vh;
   margin: auto;
@@ -14,10 +15,20 @@ body {
 
 .drop-down {
 
+   display: flex;
+  flex-direction: row;
+  margin: 10px;
+  position: relative; 
+
+}
+
+.drop-down51 {
+
   display: flex;
   flex-direction: row;
   margin: 10px;
   position: relative;
+  width: auto;
 
 }
 
@@ -53,7 +64,7 @@ body {
   padding: 10px;
   border: 1px solid grey;
   border-radius: 6px;
-  max-height: 480px;
+  max-height: 450px;
   flex: 1;
   width: 120px;
 }
@@ -70,7 +81,7 @@ body {
   padding: 10px;
   border: 1px solid grey;
   border-radius: 6px;
-  max-height: 480px;
+  max-height: 450px;
   flex: 1;
   color: white;
   font-weight: bold;
@@ -82,6 +93,22 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+
+
+.main-section {
+  height: 350px;
+  border-radius: 5px;
+  margin-top: 5px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+.main-section2{
+
+  height: auto;
+  flex: 1;
+  width: auto;
 }
 
 .add-button {
@@ -456,10 +483,8 @@ button.add-button:hover {
 }
 
 .design1 {
-  position: absolute;
-  left: 2px;
-  right: 2px;
-  margin: 450px 10px 0px 10px;
+
+  margin: -30px 10px 0px 10px;
   background-color: rgb(32, 30, 30);
   border: 2px solid grey;
   z-index: 2;
@@ -470,8 +495,15 @@ button.add-button:hover {
   justify-items: center;
   font-size: 13px;
   border-radius: 5px;
+  position: fixed;
+   left: 0;
+     right: 0; 
+     top:600;
+
 
 }
+
+
 
 .nn {
   height: 15px;
@@ -577,11 +609,6 @@ button.add-button:hover {
   height: 100%;
 }
 
-.main-section {
-  height: 400px;
-  border-radius: 5px;
-  margin-top: 5px;
-}
 
 .issues {
   border-radius: 6px;
@@ -597,8 +624,8 @@ button.add-button:hover {
   height: 60px;
   background: #0e2c5a75;
   margin-bottom: 8px;
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  flex-direction: row;
   font-weight: 450;
   font-size: 13px;
 
@@ -610,6 +637,18 @@ button.add-button:hover {
   padding-left: 15px;
   align-items: center;
   height: 30px;
+}
+
+.empty-space {
+  width: 100%;
+  height: 100%;
+}
+
+.issue-name {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 
 
@@ -692,3 +731,10 @@ background: #1f252e;
 .list5:hover {
   background: rgba(128, 128, 128, 0.24) ;
 };
+
+#form-body1{
+  position: sticky;
+  left: 0;
+  right: 0;
+  top: 0;
+}
