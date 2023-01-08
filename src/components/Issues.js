@@ -6,6 +6,7 @@ import { VscIssueDraft } from "react-icons/vsc";
 import { Octokit } from "@octokit/rest";
 import Items from "./Items";
 import { Draggable, Droppable } from "react-beautiful-dnd";
+import Archive from "./Archive";
 
 function Issues(props) {
   const style3 = {
@@ -14,16 +15,16 @@ function Issues(props) {
   };
 
   const [items, setItems] = useState([]);
-  const [shownRepositories, setShownRepositories] = useState(true);
+ // const [shownRepositories, setShownRepositories] = useState(true);
   const [issueNumber, setIssueNumber] = useState("");
-  const [issueCreated, setIssueCreated] = useState(true);
   const [currentRepoName, setCurrentRepoName] = useState("");
+  const [dataRepositoryUrl , setDataRepositoryUrl] = useState("");
 
   useEffect(() => {
     const fetchRepos = async () => {
       const res = await fetch(`https://api.github.com/users/${owner}/repos`);
       const data = await res.json();
-      console.log(data.name, data.id);
+      //console.log(data.name, data.id);
 
       setItems(data);
     };
@@ -36,7 +37,7 @@ function Issues(props) {
 
   const apiKey =
     props.apiKey === ""
-      ? "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"
+      ? "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"
       : props.apiKey;
 
   const octokit = new Octokit({
@@ -64,9 +65,10 @@ function Issues(props) {
         if (res.status == 201) {
           console.log(res.data);
           setIssueNumber(res.data.number);
-          setIssueCreated(false);
+          props.changeIssueCreatedState(props.id, props.columnId, props.issueCreated);
           setCurrentRepoName(repo);
-          alert(`issue created at ${res.data.repository_url}`);
+          alert(`issue created at ${res.data.html_url}`);
+          setDataRepositoryUrl(res.data.html_url)
         } else {
           alert(`something went wrong. Response: ${JSON.stringify(res)}`);
         }
@@ -79,6 +81,10 @@ function Issues(props) {
 
   function section() {
     props.section(props.id, props.columnId);
+  }
+
+  function archiveItem(){
+    props.archiveItem(props.id, props.columnId)
   }
 
   function section2() {
@@ -97,6 +103,10 @@ function Issues(props) {
     background: props.selection ? "rgba(128, 128, 128, 0.411)" : "transparent",
   };
 
+  const style9 = {
+    display: props.isArchived ? "none" : "grid",
+  };
+
   function onDragEnd() {
     props.onDragEnd(props.id);
   }
@@ -108,8 +118,9 @@ function Issues(props) {
           ref={draggableProvided.innerRef}
           {...draggableProvided.draggableProps}
           {...draggableProvided.dragHandleProps}
+          style={style9}
         >
-          {issueCreated ? (
+          {props.issueCreated ? (
             <div
               style={style3}
               className="issues1"
@@ -151,10 +162,15 @@ function Issues(props) {
                           <MdDriveFileRenameOutline className="icons" /> Convert
                           to issue
                         </div>
-                        <div className="list2">
-                          {" "}
-                          <HiOutlineArchive className="icons" /> Archive
-                        </div>
+                        <Archive
+                        onClick3={props.onClick3}
+                        archiveItem={archiveItem} 
+                        id={props.id}
+                        selection2={props.selection2}
+                        tables={props.tables}
+                        columnId={props.columnId}
+                        />
+
                         <DeleteItem2
                           id={props.id}
                           deleteItem2={props.deleteItem2}
@@ -225,7 +241,7 @@ function Issues(props) {
                 >
                   {" "}
                   <VscIssueDraft className="icons-1" />{" "}
-                  <span className="span1">{currentRepoName}</span>{" "}
+                  <a href={dataRepositoryUrl} target="_blank"><span className="span1">{currentRepoName}</span></a>
                   <span>#{issueNumber}</span>
                 </div>
                 <div
@@ -243,10 +259,14 @@ function Issues(props) {
                   </div>
                   <div className="list-drop-down4-1" style={style7}>
                     <div className="list-drop-down5">
-                      <div className="list2">
-                        {" "}
-                        <HiOutlineArchive className="icons" /> Archive
-                      </div>
+                    <Archive
+                        archiveItem={archiveItem} 
+                        id={props.id}
+                        selection2={props.selection2}
+                        tables={props.tables}
+                        columnId={props.columnId}
+                         onClick3={props.onClick3}
+                        />
 
                       <DeleteItem2
                         id={props.id}

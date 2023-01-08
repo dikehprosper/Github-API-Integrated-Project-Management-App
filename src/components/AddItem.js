@@ -65,6 +65,7 @@ function newIssue(){
                       }}
                     >
                       <input
+                       autoComplete="off"
                         className="design5"
                         autoFocus
                         id="name"
@@ -97,6 +98,7 @@ function newIssue(){
                       }}
                     >
                       <input
+                      autoComplete="off"
                         className="design5"
                         autoFocus
                         id="name"

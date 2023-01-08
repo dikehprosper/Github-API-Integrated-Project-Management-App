@@ -7,12 +7,16 @@ import DeleteItem from "./DeleteItem";
 import AddItem from "./AddItem";
 import { nanoid } from "nanoid";
 import { Draggable, Droppable } from "react-beautiful-dnd";
+import ArchiveAll from "./ArchiveAll";
+import DeleteAll from "./DeleteAll";
 
 
 function Column(props) {
   const [name, setName] = useState(props.name);
   const [issue, setIssue] = useState([]);
+  const count = props.issue.filter((issue) => issue.isArchived === false).length;
 
+  
   /* function newIssue(valueCollected) {
     const newIssue = {
       pick: false,
@@ -27,8 +31,8 @@ function Column(props) {
   } */
 
 
-  const count = props.issue.length;
-
+ 
+ 
 /*   function deleteItem2(id, columnId) {
     if (columnId === props.id) {
       setIssue(issue.filter((item) => id !== item.id));
@@ -109,10 +113,22 @@ function Column(props) {
   };
 
   const style5 = {
-    cursor: props.tables === "" ? "not-allowed" : "pointer",
-    color: props.tables === "" ? "grey" : "white",
-    onMouseOver: props.tables === "" ? "transparent" : "grey",
-    PointerEvent: props.tables === "" ? "none" : "all",
+    cursor: count === 0 ? "not-allowed" : "pointer",
+    color: count === 0 ? "grey" : "white",
+    onmouseover: count === 0? "transparent" : "grey",
+    PointerEvent: count === 0? "none" : "all",
+    background: count === 0? "" : "rgba(128, 128, 128, 0.411)"
+  };
+
+  const style6 = {
+    cursor: count === 0 ? "not-allowed" : "pointer",
+    color: count === 0 ? "grey" : "white",
+    onmouseover: count === 0? "transparent" : "grey",
+    PointerEvent: count === 0? "none" : "all",
+  };
+
+  const style7 = {
+    background: count === 0? "rgba(128, 128, 128, 0.411)" : ""
   };
 
   const handleShow = () => {
@@ -143,6 +159,7 @@ function Column(props) {
     event.preventDefault();
     props.updateColumn(props.id, name);
   };
+
 
 
   const reorderIssueList = (sourceCol, startIndex, endIndex) => {
@@ -212,6 +229,7 @@ function Column(props) {
               <form onSubmit={handleSubmit}>
                 <div className="">
                   <input
+                   autoComplete="off"
                     className="form-input1"
                     id="name"
                     autoFocus
@@ -225,31 +243,52 @@ function Column(props) {
               </form>{" "}
               &nbsp;
             </div>
-            <div className="count" /* onClick={props.closeAll} */>
+            <div className="count"  onClick={props.closeAll} >
               {count}
             </div>
           </div>
-          <div className="middle" /* onClick={props.closeAll} */></div>
+          <div className="middle"  onClick={props.closeAll} ></div>
           <div className="drop-down4">
             <div className="toggle" onClick={props.onClick}  ref={props.menuRef}>
               ...
             
             <div className="list-drop-down" style={style2}  >
               <div className="list-drop-down2">
-                <div className="list1" onClick={handleShow}>
+              <div className="list30">Item actions</div>
+                <div className="list1" style={style5}>
                   {" "}
-                  <MdDriveFileRenameOutline className="icons" /> Rename
+                  <ArchiveAll
+                  name={props.name}
+                  columnId={props.id}
+                  onClick={props.onClick}
+                  archiveItem2={props.archiveItem2}
+                  id={props.id}
+                  onClick3={props.onClick3}
+                  count={count}
+                />
                 </div>
-                <div className="list2">
-                  {" "}
-                  <HiOutlineArchive className="icons" style={style5} /> Archive
-                  all cards
+                <div className="list2" style={style6}>
+
+                <DeleteAll
+                  name={props.name}
+                  onClick={props.onClick}
+                  deleteAllItem={props.deleteAllItem}
+                  id={props.id}
+                  columnId={props.id}
+                  onClick3={props.onClick3}
+                  count={count}
+                />
                 </div>
               </div>
               <div className="list-drop-down3">
+              <div className="list30">Column actions</div>
+              <div className="list3" onClick={handleShow} style={style7}>
+                  {" "}
+                  <MdDriveFileRenameOutline className="icons" /> Rename
+                </div>
                 <div className="list3" onClick={hideColumn}>
                   {" "}
-                  <BiHide className="icons" /> Hide Column
+                  <BiHide className="icons" /> Hide from all
                 </div>
                 <DeleteItem
                   name={props.name}
@@ -287,6 +326,9 @@ function Column(props) {
                         apiKey={props.apiKey}
                         onDragEnd={onDragEnd}
                         showRepositories={props.showRepositories}
+                        changeIssueCreatedState ={props.changeIssueCreatedState}
+                        archiveItem={props.archiveItem}
+                        onClick3={props.onClick3}
                       />
                     );
                   })}
@@ -334,20 +376,42 @@ function Column(props) {
               ...
               </div>
             <div className="list-drop-down" style={style2} >
-              <div className="list-drop-down2">
-                <div className="list1" onClick={handleShow}>
+            <div className="list-drop-down2">
+            <div className="list30">Item actions</div>
+            <div className="list1" style={style5}>
                   {" "}
-                  <MdDriveFileRenameOutline className="icons" /> Rename
+                  <ArchiveAll
+                  name={props.name}
+                  onClick={props.onClick}
+                  archiveItem2={props.archiveItem2}
+                  id={props.id}
+                  columnId={props.id}
+                  onClick3={props.onClick3}
+                  count={count}
+                />
                 </div>
-                <div className="list2" style={style5}>
-                  {" "}
-                  <HiOutlineArchive className="icons" /> Archive all cards
+                <div className="list2" style={style6}>
+
+                <DeleteAll
+                  name={props.name}
+                  onClick={props.onClick}
+                  deleteAllItem={props.deleteAllItem}
+                  id={props.id}
+                  columnId={props.id}
+                  onClick3={props.onClick3}
+                  count={count}
+                />
                 </div>
               </div>
               <div className="list-drop-down3">
+              <div className="list30">Column actions</div>
+              <div className="list3" onClick={handleShow} style={style7}>
+                  {" "}
+                  <MdDriveFileRenameOutline className="icons" /> Rename
+                </div>
                 <div className="list3" onClick={hideColumn}>
                   {" "}
-                  <BiHide className="icons" /> Hide Column
+                  <BiHide className="icons" /> Hide from all
                 </div>
                 <DeleteItem
                   name={props.name}
@@ -356,7 +420,6 @@ function Column(props) {
                   id={props.id}
                 />
               </div>
-            
             </div>
           </div>
         </div>
@@ -385,6 +448,9 @@ function Column(props) {
                         apiKey={props.apiKey}
                         onDragEnd={onDragEnd}
                         showRepositories={props.showRepositories}
+                        changeIssueCreatedState={props.changeIssueCreatedState}
+                        archiveItem={props.archiveItem}
+                        onClick3={props.onClick3}
                       />
                     );
                   })}

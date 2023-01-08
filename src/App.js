@@ -3,9 +3,11 @@ import DropDownItem from "./components/DropDownItem";
 import React, { useEffect, useRef, useState } from "react";
 import Column from "./components/column";
 import { nanoid } from "nanoid";
-import Archive from "./components/Archive";
+import Archive from "./components/Archived";
 import { DragDropContext } from "react-beautiful-dnd";
 import { propTypes } from "react-bootstrap/esm/Image";
+import Archived from "./components/Archived";
+import { BiArrowBack } from "react-icons/bi";
 
 function App() {
   const [dropDown, setDropDown] = useState(false);
@@ -14,6 +16,15 @@ function App() {
   const [apiKey, setApiKey] = useState("");
   const [savedUserName, setSavedUserName] = useState(false);
   const [savedApiKey, setSavedApiKey] = useState(false);
+  const [archivedState, setArchivedState] = useState(true);
+ 
+
+  /* const [totalArchived, setTotalArchived] = useState('');
+  
+
+  function rrchived(issue){
+    setTotalArchived(issue)
+  } */
 
   const handleShowss = () => {
     setShowss(true);
@@ -50,7 +61,26 @@ function App() {
   };
 
   const [columns, setColumns] = useState([]);
+  const [count, setCount] = useState(0);
 
+  //to get length of total archive items
+  const getTotalLength = (array, innerArrayProperty, innerProperty) => {
+    let totalLength = 0;
+    for (const object of array) {
+    for(const innerObject of object[innerArrayProperty]){
+      if (innerObject[innerProperty]){
+        totalLength++;
+      }
+    }
+      
+    }
+    return totalLength;
+  };
+  
+  const totalLength = getTotalLength(columns, 'issue', 'isArchived');
+
+
+    console.log(count);
   useEffect(() => {
     let columns = [
       {
@@ -184,6 +214,7 @@ function App() {
   }
 
   function hideSpecificColumn(id) {
+    onClick2();
     const hideColumn = columns.map((column) => {
       if (id === column.id) {
         return { ...column, select: false };
@@ -194,6 +225,7 @@ function App() {
   }
 
   function handleAllShow(id) {
+    onClick2();
     setShowss(false);
     const handleAllShow = columns.map((column) => {
       if (id === column.id) {
@@ -241,6 +273,7 @@ function App() {
   }
 
   function AddItem(id) {
+    onClick2();
     let updateColumns = columns.map((column) => {
       if (id === column.id) {
         return { ...column, called: false, highlight: false };
@@ -250,7 +283,20 @@ function App() {
     setColumns(updateColumns);
   }
 
+  /* const [update, setUpdate] =  useState([])
+  function gone() {
+    columns.map((column) => {
+      return column.issue.map((issue) => {
+        console.log(issue.tables)
+        setUpdate(prev => 
+          [prev, issue.tables]
+        )
+      })
+    })
+  } */
+
   function newIssue(id, valueCollected) {
+    onClick2();
     let newIssue = {
       pick: false,
       id: nanoid(),
@@ -258,6 +304,8 @@ function App() {
       tables: valueCollected,
       selection2: false,
       shownRepositories: true,
+      issueCreated: true,
+      isArchived: false,
     };
 
     let updateColumns = columns.map((column) => {
@@ -269,17 +317,32 @@ function App() {
           issue: [...column.issue, newIssue],
         };
       }
+
       return column;
     });
     setColumns(updateColumns);
   }
 
   function deleteItem2(id, columnId) {
+    onClick2();
     let updateColumns = columns.map((column) => {
       if (columnId === column.id) {
         return {
           ...column,
           issue: column.issue.filter((item) => id !== item.id),
+        };
+      }
+      return column;
+    });
+    setColumns(updateColumns);
+  }
+
+  function deleteAllItem(id, columnId) {
+    let updateColumns = columns.map((column) => {
+      if (columnId === column.id) {
+        return {
+          ...column,
+          issue: column.issue.filter((item) => id !== item.id && id == item.id),
         };
       }
       return column;
@@ -327,6 +390,7 @@ function App() {
 
   function dropItem2(id, columnId) {
     setShowss(false);
+    onClick2();
     let updateColumns = columns.map((column) => {
       if (columnId === column.id) {
         return {
@@ -351,6 +415,60 @@ function App() {
           pick: false,
           issue: column.issue.map((issue) => {
             return { ...issue, pick: false };
+          }),
+        };
+      }
+      return column;
+    });
+    setColumns(updateColumns);
+  }
+
+  function changeIssueCreatedState(id, columnId, issueCreated) {
+    let updateColumns = columns.map((column) => {
+      if (columnId === column.id) {
+        return {
+          ...column,
+          issue: column.issue.map((issue) => {
+            if (id === issue.id) {
+              return { ...issue, issueCreated: false };
+            }
+            return { ...issue };
+          }),
+        };
+      }
+      return column;
+    });
+    setColumns(updateColumns);
+  }
+
+
+  function archiveItem(id, columnId) {
+    onClick2();
+    let updateColumns = columns.map((column) => {
+      if (columnId === column.id) {
+        return {
+          ...column,
+          issue: column.issue.map((issue) => {
+            if (id === issue.id) {
+              return { ...issue, isArchived: true };
+            }
+            return { ...issue };
+          }),
+        };
+      }
+      return column;
+    });
+    setColumns(updateColumns);
+  }
+
+  function archiveItem2( columnId) {
+    let updateColumns = columns.map((column) => {
+      if (columnId === column.id) {
+        return {
+          ...column,
+          pick:false,
+          issue: column.issue.map((issue) => {
+              return { ...issue, isArchived: true };
           }),
         };
       }
@@ -664,59 +782,100 @@ function App() {
               </div>
             </div>
           </div>
-          <div className="drop-down">
-            <div className="drop-down51">
-              <div className="total-column" ref={menuRef}>
-                {columns.map((column, index) => {
-                  return (
-                    <Column
-                      key={column.id}
-                      {...column}
-                      index={index}
-                      column={column}
-                      onClick={() => DropItem(column.id)}
-                      updateColumn={updateColumn}
-                      hideSpecificColumn={hideSpecificColumn}
-                      handleAllShow={handleAllShow}
-                      deleteSpecificItem={deleteSpecificItem}
+
+          {archivedState ? (
+            <>
+              <div style={{ position: "sticky", left: "0" }}>
+                <button
+                  className="archived-button"
+                  onClick={() => setArchivedState(false)}
+                >
+                  View Archived Items
+                </button>
+              </div>
+              <div className="drop-down">
+                <div className="drop-down51">
+                  <div className="total-column" ref={menuRef}>
+                    {columns.map((column, index) => {
+                      return (
+                        <Column
+                          key={column.id}
+                          {...column}
+                          index={index}
+                          column={column}
+                          onClick={() => DropItem(column.id)}
+                          updateColumn={updateColumn}
+                          hideSpecificColumn={hideSpecificColumn}
+                          handleAllShow={handleAllShow}
+                          deleteSpecificItem={deleteSpecificItem}
+                          Hidden={Hidden}
+                          Visible={Visible}
+                          AddItem={AddItem}
+                          openInput={openInput}
+                          closeInput={closeInput}
+                          closeAll={closeAll}
+                          userName={userName}
+                          apiKey={apiKey}
+                          newIssue={newIssue}
+                          deleteItem2={deleteItem2}
+                          section={section}
+                          section2={section2}
+                          closeAll3={closeAll3}
+                          closeAll2={closeAll2}
+                          menuRef3={menuRef3}
+                          dropItem2={dropItem2}
+                          showRepositories={showRepositories}
+                          changeIssueCreatedState={changeIssueCreatedState}
+                          archiveItem={archiveItem}
+                          onClick3={dropItem2}
+                          archiveItem2={archiveItem2}
+                          deleteAllItem={deleteAllItem}
+                        />
+                      );
+                    })}
+                    ;
+                  </div>
+                  {dropDown ? (
+                    <DropDownItem
+                      newColumns={newColumns}
                       Hidden={Hidden}
                       Visible={Visible}
-                      AddItem={AddItem}
-                      openInput={openInput}
-                      closeInput={closeInput}
-                      closeAll={closeAll}
-                      userName={userName}
-                      apiKey={apiKey}
-                      newIssue={newIssue}
-                      deleteItem2={deleteItem2}
-                      section={section}
-                      section2={section2}
-                      closeAll3={closeAll3}
-                      closeAll2={closeAll2}
-                      menuRef3={menuRef3}
-                      dropItem2={dropItem2}
-                      showRepositories={showRepositories}
+                      handleShowss={handleShowss}
+                      showss={showss}
+                      hideShowss={hideShowss}
                     />
-                  );
-                })}
-                ;
+                  ) : (
+                    <button className="add-button" onClick={onClick1}>
+                      +
+                    </button>
+                  )}
+                </div>
               </div>
-              {dropDown ? (
-                <DropDownItem
-                  newColumns={newColumns}
-                  Hidden={Hidden}
-                  Visible={Visible}
-                  handleShowss={handleShowss}
-                  showss={showss}
-                  hideShowss={hideShowss}
-                />
-              ) : (
-                <button className="add-button" onClick={onClick1}>
-                  +
-                </button>
-              )}
+            </>
+          ) : (
+            <div className="archive-container">
+              <div className="archive-container1">
+                {" "}
+                <BiArrowBack onClick={() => setArchivedState(true)} /> &nbsp;
+                &nbsp;Archive
+              </div>
+              <div className="archive-container2">
+                <div className="archive-container3">
+                  <div className="archive-container4"> <div>{totalLength} archived item</div>
+                  <div>...</div> </div>
+                  {columns.map((column) => {
+                    return column.issue.map((issue) => {
+                      return (
+                        <div className="archive-container5">
+                          <Archived issue={issue} />
+                        </div>
+                      );
+                    });
+                  })}
+                </div>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </DragDropContext>

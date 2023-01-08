@@ -3,27 +3,26 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { HiOutlineArchive } from "react-icons/hi";
 
-function Archive(props) {
+function ArchiveAll(props) {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const archiveItem = () => {
+  const archiveItem2 = () => {
     handleClose();
-     props.archiveItem(props.id, props.columnId);
+     props.archiveItem2(props.columnId);
   };
 
   return (
     <>
       <div
-        className="list2"
         onClick={() => {
             props.onClick3();
           handleShow();
         }}
       >
-        <HiOutlineArchive className="icons" /> Archive
+        <HiOutlineArchive className="icons7" /> Archive All
       </div>
       <Modal
         show={show}
@@ -32,17 +31,20 @@ function Archive(props) {
         keyboard={false}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Archive Item?</Modal.Title>
+          <Modal.Title>Archive All Item?</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Are you sure you want to archive this item?
+            {props.count === 1 ? ( <div>Are you sure you want to archive {props.count} item from {props.name}</div> ) :(  
+                <div><div>Are you sure you want to archive all {props.count} items from {props.name}</div></div>
+            )}
+          
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={handleClose}>Close</Button>
-          <Button onClick={archiveItem}>Archive</Button>
+          <Button onClick={archiveItem2}>Archive</Button>
         </Modal.Footer>
       </Modal>
     </>
   );
 }
-export default Archive;
+export default ArchiveAll;
