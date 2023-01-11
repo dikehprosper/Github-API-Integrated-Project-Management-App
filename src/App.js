@@ -8,6 +8,11 @@ import { DragDropContext } from "react-beautiful-dnd";
 import { propTypes } from "react-bootstrap/esm/Image";
 import Archived from "./components/Archived";
 import { BiArrowBack } from "react-icons/bi";
+import { VscEllipsis } from "react-icons/vsc";
+import { VscIssueDraft } from "react-icons/vsc";
+import { HiOutlineArchive } from "react-icons/hi";
+import { isAccordionItemSelected } from "react-bootstrap/esm/AccordionContext";
+import ArchiveAll from "./components/ArchiveAll";
 
 function App() {
   const [dropDown, setDropDown] = useState(false);
@@ -17,7 +22,6 @@ function App() {
   const [savedUserName, setSavedUserName] = useState(false);
   const [savedApiKey, setSavedApiKey] = useState(false);
   const [archivedState, setArchivedState] = useState(true);
- 
 
   /* const [totalArchived, setTotalArchived] = useState('');
   
@@ -67,20 +71,17 @@ function App() {
   const getTotalLength = (array, innerArrayProperty, innerProperty) => {
     let totalLength = 0;
     for (const object of array) {
-    for(const innerObject of object[innerArrayProperty]){
-      if (innerObject[innerProperty]){
-        totalLength++;
+      for (const innerObject of object[innerArrayProperty]) {
+        if (innerObject[innerProperty]) {
+          totalLength++;
+        }
       }
-    }
-      
     }
     return totalLength;
   };
-  
-  const totalLength = getTotalLength(columns, 'issue', 'isArchived');
 
+  const totalLength = getTotalLength(columns, "issue", "isArchived");
 
-    console.log(count);
   useEffect(() => {
     let columns = [
       {
@@ -140,7 +141,6 @@ function App() {
     let handler = (e) => {
       if (!menuRef.current.contains(e.target)) {
         closeAll();
-        console.log(menuRef.current);
       }
     };
     document.addEventListener("mousedown", handler);
@@ -165,6 +165,7 @@ function App() {
             selection: false,
             selection2: false,
             shownRepositories: true,
+            archiveDropdownMenu: false,
           };
         }),
       };
@@ -306,6 +307,7 @@ function App() {
       shownRepositories: true,
       issueCreated: true,
       isArchived: false,
+      archiveDropdownMenu: false,
     };
 
     let updateColumns = columns.map((column) => {
@@ -324,18 +326,33 @@ function App() {
   }
 
   function deleteItem2(id, columnId) {
-    onClick2();
+    // onClick2();
     let updateColumns = columns.map((column) => {
+      console.log(id, columnId, column.id)
       if (columnId === column.id) {
         return {
           ...column,
-          issue: column.issue.filter((item) => id !== item.id),
+          issue: column.issue.filter((item) => id != item.id),
         };
       }
       return column;
     });
     setColumns(updateColumns);
   }
+
+  function deleteItem3(columnId, id) {
+    // onClick2();
+    let updateColumns = columns.map((column) => {
+      console.log(id, columnId, column.id)
+      if (columnId === column.id) {
+          column.issue = column.issue.filter((item) => item.id !== id)
+        
+      }
+      return column;
+    });
+    setColumns(updateColumns);
+  }
+
 
   function deleteAllItem(id, columnId) {
     let updateColumns = columns.map((column) => {
@@ -423,6 +440,43 @@ function App() {
     setColumns(updateColumns);
   }
 
+
+  function ArchiveDropdown(columnId, id) {
+   // setShowss(false);
+   // onClick2();
+    let updateColumns = columns.map((column) => {
+      if (columnId === column.id) {
+        return {
+          ...column,
+          highlight: false,
+          called: false,
+          show: false,
+          pick: false,
+          issue: column.issue.map((issue) => {
+            if (id === issue.id) {
+              return { ...issue, archiveDropdownMenu: !issue.archiveDropdownMenu };
+            }
+            return { ...issue, selection: false, pick: false, archiveDropdownMenu: false };
+          }),
+        };
+      } else if (columnId !== column.id) {
+        return {
+          ...column,
+          highlight: false,
+          called: false,
+          show: false,
+          pick: false,
+          issue: column.issue.map((issue) => {
+            return { ...issue, pick: false, archiveDropdownMenu: false };
+          }),
+        };
+      }
+      return column;
+    });
+    setColumns(updateColumns);
+  }
+
+
   function changeIssueCreatedState(id, columnId, issueCreated) {
     let updateColumns = columns.map((column) => {
       if (columnId === column.id) {
@@ -440,7 +494,6 @@ function App() {
     });
     setColumns(updateColumns);
   }
-
 
   function archiveItem(id, columnId) {
     onClick2();
@@ -461,14 +514,34 @@ function App() {
     setColumns(updateColumns);
   }
 
-  function archiveItem2( columnId) {
+  function unArchiveItem(columnId, id) {
+   // onClick2();
     let updateColumns = columns.map((column) => {
       if (columnId === column.id) {
         return {
           ...column,
-          pick:false,
           issue: column.issue.map((issue) => {
-              return { ...issue, isArchived: true };
+            console.log(columnId, column.id, issue.id, id, issue.isArchived)
+            if (id === issue.id) {
+              issue.isArchived = false 
+            };
+            return issue ;
+          })
+        };
+      }
+      return column;
+    })
+    setColumns(updateColumns)
+  }
+
+  function archiveItem2(columnId) {
+    let updateColumns = columns.map((column) => {
+      if (columnId === column.id) {
+        return {
+          ...column,
+          pick: false,
+          issue: column.issue.map((issue) => {
+            return { ...issue, isArchived: true };
           }),
         };
       }
@@ -546,12 +619,7 @@ function App() {
           }),
         };
       }
-      return {
-        ...column,
-        issue: column.issue.map((issue) => {
-          return { ...issue, selection: false, pick: false };
-        }),
-      };
+      return column;
     });
     setColumns(updateColumns);
   }
@@ -718,9 +786,64 @@ function App() {
     setApiKey(apiKey);
   }
 
+/*   const reorderIssueList = (sourceCol, startIndex, endIndex) => {
+    const newTaskIds = Array.from(sourceCol);
+   const [removed] = newTaskIds.splice(startIndex, 1);
+   newTaskIds.splice(endIndex, 0, removed);
+   console.log(newTaskIds)
+  
+     const newIssue = {
+    ...sourceCol,
+    id: newTaskIds,
+   };  
+
+   return newIssue;
+  };*/
+  
+  const onDragEnd = (result) => {
+    const { destination, source } = result;
+/* 
+          //if users tries to drop in an unknown destination
+          if (!destination) return;
+
+          //if the user drags and drops back in the same position
+          if (
+            destination.droppableId === source.droppableId &&
+            destination.index === source.index
+          ) {
+            return;
+          }
+
+    //if the user drops within the same column but same position
+
+    const sourceCol = issue[source.droppableId];
+    const destinationCol = issue[destination.droppableId]
+
+    if(sourceCol.id === destinationCol.id){
+      const newIssue = reorderIssueList(
+        sourceCol,
+        source.index,
+        destination.index
+      )
+
+          const newState = {
+        ...issue,
+        [newIssue.id]: newIssue
+      }    
+
+     // 
+      setIssue(newState);
+      return;
+    };
+    //if the user moves from one column to another
+
+ */
+  
+  
+  };
+ 
   return (
-    <DragDropContext>
-      {" "}
+    <DragDropContext  /* onDragEnd={onDragEnd} */ >{
       <div className="body">
         <div className="body1">
           <div style={{ position: "sticky", left: "0" }}>
@@ -784,7 +907,7 @@ function App() {
           </div>
 
           {archivedState ? (
-            <>
+             <>
               <div style={{ position: "sticky", left: "0" }}>
                 <button
                   className="archived-button"
@@ -795,7 +918,7 @@ function App() {
               </div>
               <div className="drop-down">
                 <div className="drop-down51">
-                  <div className="total-column" ref={menuRef}>
+                  <div className="total-column"  ref={menuRef}>
                     {columns.map((column, index) => {
                       return (
                         <Column
@@ -851,9 +974,9 @@ function App() {
                   )}
                 </div>
               </div>
-            </>
+              </>
           ) : (
-            <div className="archive-container">
+            <div className="archive-container" >
               <div className="archive-container1">
                 {" "}
                 <BiArrowBack onClick={() => setArchivedState(true)} /> &nbsp;
@@ -861,24 +984,39 @@ function App() {
               </div>
               <div className="archive-container2">
                 <div className="archive-container3">
-                  <div className="archive-container4"> <div>{totalLength} archived item</div>
-                  <div>...</div> </div>
-                  {columns.map((column) => {
-                    return column.issue.map((issue) => {
-                      return (
-                        <div className="archive-container5">
-                          <Archived issue={issue} />
-                        </div>
-                      );
-                    });
-                  })}
+                  <div className="archive-container4">
+                    {" "}
+                    <div> {totalLength} archived item</div>
+                  </div>
+                  {totalLength === 0 ? (
+                    <div className="archived-container11">
+                      <HiOutlineArchive className="icons-archived-container11" />
+                      <h4>There aren't any archived items</h4>
+                      <p>
+                        Archive items from a project view and they'll be shown
+                        here.
+                      </p>
+                    </div>
+                  ) : null}
+                  {columns.map((column) => (
+                    <Archived
+                    key={column.id}
+                    {...column}
+                    unArchiveItem={unArchiveItem}
+                    ArchiveDropdown={ArchiveDropdown}
+                    menuRef={menuRef}
+                    deleteItem3={deleteItem3}
+                    />
+                  )
+                    
+                  )}
                 </div>
               </div>
             </div>
           )}
         </div>
       </div>
-    </DragDropContext>
+     }</DragDropContext>
   );
 }
 

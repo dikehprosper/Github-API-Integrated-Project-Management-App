@@ -9,7 +9,7 @@ import { nanoid } from "nanoid";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import ArchiveAll from "./ArchiveAll";
 import DeleteAll from "./DeleteAll";
-
+import { DragDropContext } from "react-beautiful-dnd";
 
 function Column(props) {
   const [name, setName] = useState(props.name);
@@ -162,65 +162,11 @@ function Column(props) {
 
 
 
-  const reorderIssueList = (sourceCol, startIndex, endIndex) => {
-    const newTaskIds = Array.from(sourceCol);
-   const [removed] = newTaskIds.splice(startIndex, 1);
-   newTaskIds.splice(endIndex, 0, removed);
-   console.log(newTaskIds)
-  
-     const newIssue = {
-    ...sourceCol,
-    id: newTaskIds,
-   };  
-
-   return newIssue;
-  };
-  
-  const onDragEnd = (result) => {
-    const { destination, source } = result;
-
-          //if users tries to drop in an unknown destination
-          if (!destination) return;
-
-          //if the user drags and drops back in the same position
-          if (
-            destination.droppableId === source.droppableId &&
-            destination.index === source.index
-          ) {
-            return;
-          }
-
-    //if the user drops within the same column but same position
-
-    const sourceCol = issue[source.droppableId];
-    const destinationCol = issue[destination.droppableId]
-
-    if(sourceCol.id === destinationCol.id){
-      const newIssue = reorderIssueList(
-        sourceCol,
-        source.index,
-        destination.index
-      )
-
-          const newState = {
-        ...issue,
-        [newIssue.id]: newIssue
-      }    
-
-     // 
-      setIssue(newState);
-      return;
-    };
-    //if the user moves from one column to another
-
-
-  
-  
-  };
+ 
 
 
 
-  return    props.show ? (
+  return   props.show ? (
     <div style={style1}>
       <div className="new-column">
         <div className="new-column1">
@@ -305,7 +251,7 @@ function Column(props) {
           <div>
           <Droppable droppableId={`${props.id}`}>
               {(droppableProvided) => (
-                <div ref={droppableProvided.innerRef} onDragEnd={onDragEnd}
+                <div ref={droppableProvided.innerRef}
                 {...droppableProvided.droppableProps}> 
                 <div ref={props.menuRef3}>
                   {props.issue.map((issue, index) => {
@@ -318,13 +264,12 @@ function Column(props) {
                         dropItem2={props.dropItem2}
                         section={props.section}
                         section2={props.section2}
-                      //  menuRef={props.menuRef3}
+                        menuRef={props.menuRef3}
                         closeAll={props.closeAll3}
                         closeAll2={props.closeAll2}
                         deleteItem2={props.deleteItem2}
                         userName={props.userName}
                         apiKey={props.apiKey}
-                        onDragEnd={onDragEnd}
                         showRepositories={props.showRepositories}
                         changeIssueCreatedState ={props.changeIssueCreatedState}
                         archiveItem={props.archiveItem}
@@ -332,7 +277,6 @@ function Column(props) {
                       />
                     );
                   })}
-                  {droppableProvided.placeholder}
                   </div>
               </div>
               )}
@@ -426,8 +370,8 @@ function Column(props) {
         <div className="main-section"  >
           <div >
             <Droppable droppableId={`${props.id}`}>
-              {(droppableProvided) => (
-                <div ref={droppableProvided.innerRef} onDragEnd={onDragEnd}
+              {(droppableProvided,droppableSnapshot) => (
+                <div ref={droppableProvided.innerRef}
                 {...droppableProvided.droppableProps}> 
                 <div ref={props.menuRef3}>
                   {props.issue.map((issue, index) => {
@@ -446,7 +390,6 @@ function Column(props) {
                         deleteItem2={props.deleteItem2}
                         userName={props.userName}
                         apiKey={props.apiKey}
-                        onDragEnd={onDragEnd}
                         showRepositories={props.showRepositories}
                         changeIssueCreatedState={props.changeIssueCreatedState}
                         archiveItem={props.archiveItem}
@@ -454,7 +397,6 @@ function Column(props) {
                       />
                     );
                   })}
-                  {droppableProvided.placeholder}
                   </div>
               </div>
               )}
@@ -462,7 +404,7 @@ function Column(props) {
             </Droppable> 
             <div className="issues" style={style4}></div>
           </div>
-          <div className="main-section2" onClick={props.closeAll}></div>
+          {/* <div className="main-section2" onClick={props.closeAll}></div> */}
         </div>
 
         <div className="add-item" onClick={openInput}>
@@ -482,6 +424,7 @@ function Column(props) {
       </div>
     </div>
   )
+    
 
 }
 export default Column;

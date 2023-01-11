@@ -37,7 +37,7 @@ function Issues(props) {
 
   const apiKey =
     props.apiKey === ""
-      ? "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"
+      ? "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"
       : props.apiKey;
 
   const octokit = new Octokit({
@@ -73,6 +73,7 @@ function Issues(props) {
           alert(`something went wrong. Response: ${JSON.stringify(res)}`);
         }
       });
+      
   };
 
   function showRepositories() {
@@ -107,9 +108,7 @@ function Issues(props) {
     display: props.isArchived ? "none" : "grid",
   };
 
-  function onDragEnd() {
-    props.onDragEnd(props.id);
-  }
+ 
 
   return (
     <Draggable key={props.id} draggableId={`${props.id}`} index={props.index}>
@@ -197,6 +196,7 @@ function Issues(props) {
                                     id={item.id}
                                     name={item.name}
                                     postIssue={postIssue}
+
                                   />
                                 );
                               })}

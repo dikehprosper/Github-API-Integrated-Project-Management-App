@@ -100,7 +100,7 @@
   height: 350px;
   border-radius: 5px;
   margin-top: 5px;
-  overflow-y: auto;
+  
   display: flex;
   flex-direction: column;
 }
@@ -337,15 +337,31 @@ button.add-button:hover {
   white-space: nowrap;
 }
 
+
 .list-drop-down4-1 {
-  min-width: 190px;
+  min-width: 170px;
   height: 80px;
   background: rgba(128, 128, 128, 0.411);
   border: 1px solid grey;
   position: absolute;
   top: 35px;
-  left: 5px;
+  left: 2px;
   border-radius: 10px;
+  display: grid;
+  gap: 2px;
+  z-index: 100;
+  white-space: nowrap;
+}
+
+.list-drop-down4-2 {
+  min-width: 170px;
+  height: 80px;
+  background: rgba(128, 128, 128, 0.411);
+  border: 1px solid grey;
+  position: absolute;
+  top: 25px;
+  right: 30px;
+  border-radius: 10px 0px 10px 10px;
   display: grid;
   gap: 2px;
   z-index: 100;
@@ -377,10 +393,11 @@ button.add-button:hover {
 
 .list-drop-down5 {
   background-color: rgb(32, 30, 30);
-  border-radius: 9px 9px 9px 9px;
+  border-radius: 9px 0px 9px 9px;
   display: grid;
   gap: 2px;
   padding-top: 3px;
+  max-width: 180px;
 }
 
 .list-drop-down3 {
@@ -444,13 +461,31 @@ button.add-button:hover {
   font-weight: 200;
   display: flex;
   font-size: 12px;
-  margin: 3px 3px 3px 3px;
+  margin: 1px 1px 1px 1px;
   border-radius: 5px;
   display: flex;
   flex-direction: row;
   padding-left: 10px;
   color: red;
   align-items: center;
+}
+.list6 {
+  font-weight: 200;
+  display: flex;
+  font-size: 12px;
+  margin: 1px 1px 1px 1px;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: row;
+  padding-left: 10px;
+  color: green;
+  align-items: center;
+}
+
+
+.list6:hover{
+  background: rgb(93, 172, 93);
+  color: white;
 }
 
 .list1:hover,
@@ -468,6 +503,7 @@ button.add-button:hover {
   height: 15px;
   margin-right: 10px;
 }
+
 
 .icons7 {
   width: 15px;
@@ -684,10 +720,12 @@ font-size: 14px;
   flex-direction: column;
   align-self: center;
   margin-top: 20px ;
-  width: 80%;;
+  width: 70%;;
   border: .5px solid grey;
   border-radius: 6px;
 }
+
+
 
 .archive-container3 {
  flex: 1; 
@@ -704,7 +742,6 @@ font-size: 14px;
  border-radius: 5px 5px 0px 0px;
  display: flex;
  flex-direction: row;
- justify-content: space-between;
  align-items: center;
  padding-left: 20px;
  font-size: 13px;
@@ -730,10 +767,56 @@ font-size: 14px;
   font-size: 13px;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
+  flex: 1;
 }
 
+.archived-container7 {
+  width: 25px;
+}
+
+.archived-container8 {
+  width: 25px;
+}
+
+.archived-container9 {
+  flex: 1;
+  
+}
+
+.archived-container10 {
+  display: flex;
+  height: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-items: center;
+  font-size: 25px;
+  position: relative;
+ 
+}
+
+.archived-container11 {
+  color: white;
+  display: grid;
+  grid-template-columns: 1fr;
+  flex-direction: row;
+  align-content: center;
+  justify-items: center;
+  width: 100%;
+  border-radius: 0px 0px 6px 6px;
+  height: 180px;
+}
+
+.archived-container11 > p {
+font-size: 13px;
+margin-top: -3px;
+}
+
+
+
+.icons-archived-container11 {
+  font-size: 30px;
+}
 
 
 .archived-button:hover {
@@ -771,6 +854,12 @@ font-size: 14px;
   align-items: center;max-width: 350px;
   margin-left: 10px;
   height: 50px;
+}
+
+.span1 {
+  color: rgb(19, 245, 19);
+  margin-right: 5px;
+  white-space: nowrap;
 }
 
 
@@ -827,7 +916,10 @@ background: #1f252e;
 .span1 {
   color: rgb(19, 245, 19);
   margin-right: 5px;
+  max-width: 300px;
 }
+
+
 
 .list5 {
   padding-left: 10px;
@@ -846,4 +938,14 @@ background: #1f252e;
   left: 0;
   right: 0;
   top: 0;
+}
+
+.icons-archive{
+  height: 25px;
+}
+
+.icons-archive:hover{
+  background: white;
+  border-radius: 4px;
+  color: black;
 }
