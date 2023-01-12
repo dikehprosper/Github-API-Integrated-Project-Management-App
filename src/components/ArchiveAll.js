@@ -17,12 +17,13 @@ function ArchiveAll(props) {
   return (
     <>
       <div
+      className="list12"
         onClick={() => {
             props.onClick3();
           handleShow();
         }}
       >
-        <HiOutlineArchive className="icons7" /> Archive All
+        <HiOutlineArchive className="icons" /> Archive All
       </div>
       <Modal
         show={show}

@@ -31,9 +31,6 @@ function Issues(props) {
     fetchRepos();
   }, [props.userName]);
 
-  /*   useEffect(() => {
-    console.log(items);
-  }, [items]); */
 
   const apiKey =
     props.apiKey === ""
@@ -111,12 +108,12 @@ function Issues(props) {
  
 
   return (
-    <Draggable key={props.id} draggableId={`${props.id}`} index={props.index}>
-      {(draggableProvided, draggableSnapshot) => (
+    /* <Draggable key={props.id} draggableId={`${props.id}`} index={props.index}>
+      {(draggableProvided, draggableSnapshot) => ( */
         <div
-          ref={draggableProvided.innerRef}
+          /* ref={draggableProvided.innerRef}
           {...draggableProvided.draggableProps}
-          {...draggableProvided.dragHandleProps}
+          {...draggableProvided.dragHandleProps} */
           style={style9}
         >
           {props.issueCreated ? (
@@ -298,8 +295,8 @@ function Issues(props) {
             </div>
           )}
         </div>
-      )}
-    </Draggable>
+    /*   )}
+    </Draggable> */
   );
 }
 

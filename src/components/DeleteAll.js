@@ -17,6 +17,7 @@ function DeleteAll(props) {
   return (
     <>
       <div
+      className="list13"
         onClick={() => {
           props.onClick();
           handleShow();

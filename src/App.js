@@ -838,12 +838,12 @@ function App() {
     //if the user moves from one column to another
 
  */
-  
-  
+   
   };
  
   return (
-    <DragDropContext  /* onDragEnd={onDragEnd} */ >{
+    <>
+    {/* <DragDropContext   onDragEnd={onDragEnd} >{ */}
       <div className="body">
         <div className="body1">
           <div style={{ position: "sticky", left: "0" }}>
@@ -1016,7 +1016,8 @@ function App() {
           )}
         </div>
       </div>
-     }</DragDropContext>
+    {/* }</DragDropContext> */}
+   </>
   );
 }
 
