@@ -19,11 +19,12 @@ function Archived(props, { menuRef }) {
           display: issue.archiveDropdownMenu ? "grid" : "none",
         };
 
+       console.log(issue.issueNumber);
         return (
           <div className="archive-container5" key={issue.id}  >
             <div style={style}  >
               <div className="archived-container6" >
-                <div className="archived-container8">
+                <div className="archived-container8" onClick={props.closeAll}>
                   {issue.created ? (
                     <>
                       <VscIssueDraft className="icons" />
@@ -34,11 +35,11 @@ function Archived(props, { menuRef }) {
                     </>
                   )}
                 </div>
-                <div className="archived-container9">{issue.tables}</div>
+                <div className="archived-container9"><div className="archived-container9-2" >{issue.tables} &nbsp; #{issue.issueNumber}</div> <div className="archived-container9-1" onClick={props.closeAll} ></div></div>
+                
                 <div
                   className="archived-container10"
                   onClick={() => props.ArchiveDropdown(props.id, issue.id)}
-                 
                 >
                   <VscEllipsis className="icons-archive" />{" "}
                   <div className="list-drop-down4-2" style={style10}>

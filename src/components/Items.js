@@ -2,7 +2,8 @@ import React from "react";
 
 function Items(props) {
     function postIssue(){
-        props.postIssue(props.id)
+      props.closeAll2(props.id, props.columnId);
+        props.postIssue(props.itemId, props.id, props.columnId, props.tables )
     };
 
   return (

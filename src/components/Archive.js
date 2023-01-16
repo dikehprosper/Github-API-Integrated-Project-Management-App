@@ -5,7 +5,6 @@ import { HiOutlineArchive } from "react-icons/hi";
 
 function Archive(props) {
   const [show, setShow] = useState(false);
-
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -13,6 +12,8 @@ function Archive(props) {
     handleClose();
      props.archiveItem(props.id, props.columnId);
   };
+
+ 
 
   return (
     <>

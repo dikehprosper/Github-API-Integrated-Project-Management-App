@@ -1,7 +1,7 @@
 import "./App.css";
 import DropDownItem from "./components/DropDownItem";
 import React, { useEffect, useRef, useState } from "react";
-import Column from "./components/column";
+import Column from "./components/Column";
 import { nanoid } from "nanoid";
 import Archive from "./components/Archived";
 import { DragDropContext } from "react-beautiful-dnd";
@@ -13,22 +13,12 @@ import { VscIssueDraft } from "react-icons/vsc";
 import { HiOutlineArchive } from "react-icons/hi";
 import { isAccordionItemSelected } from "react-bootstrap/esm/AccordionContext";
 import ArchiveAll from "./components/ArchiveAll";
+import { Octokit } from "@octokit/rest";
 
 function App() {
   const [dropDown, setDropDown] = useState(false);
   const [showss, setShowss] = useState(false);
-  const [userName, setUserName] = useState("");
-  const [apiKey, setApiKey] = useState("");
-  const [savedUserName, setSavedUserName] = useState(false);
-  const [savedApiKey, setSavedApiKey] = useState(false);
   const [archivedState, setArchivedState] = useState(true);
-
-  /* const [totalArchived, setTotalArchived] = useState('');
-  
-
-  function rrchived(issue){
-    setTotalArchived(issue)
-  } */
 
   const handleShowss = () => {
     setShowss(true);
@@ -81,42 +71,23 @@ function App() {
   };
 
   const totalLength = getTotalLength(columns, "issue", "isArchived");
+  // getting username and api key
 
-  useEffect(() => {
-    let columns = [
-      {
-        id: 1,
-        name: "Todo",
-        issue: [],
-      },
-      {
-        id: 2,
-        name: "In Progress",
-        issue: [],
-      },
-      {
-        id: 3,
-        name: "Done",
-        issue: [],
-      },
-    ];
-    setColumns(
-      columns.map((d) => {
-        return {
-          pick: false,
-          select: true,
-          id: d.id,
-          name: d.name,
-          show: false,
-          tables: "",
-          called: false,
-          highlight: false,
-          count: 0,
-          issue: d.issue,
-        };
-      })
-    );
-  }, []);
+  function saveUserName() {
+    newUserName();
+    setSavedUserName(true);
+  }
+  function newUserName() {
+    setUserName(userName);
+  }
+
+  function saveApiKey() {
+    newApiKey();
+    setSavedApiKey(true);
+  }
+  function newApiKey() {
+    setApiKey(apiKey);
+  }
 
   //functions for outer columns
 
@@ -136,42 +107,42 @@ function App() {
     setColumns([...columns]);
   }
 
-  let menuRef = useRef();
   useEffect(() => {
-    let handler = (e) => {
-      if (!menuRef.current.contains(e.target)) {
-        closeAll();
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => {
-      document.removeEventListener("mousedown", handler);
-    };
-  });
+    let columns = [
+      {
+        id: "column-1",
+        name: "Todo",
+        issue: [],
+      },
+      {
+        id: "column-2",
+        name: "In Progress",
+        issue: [],
+      },
+      {
+        id: "column-3",
+        name: "Done",
+        issue: [],
+      },
+    ];
 
-  function closeAll() {
-    setShowss(false);
-    const handleAllShow = columns.map((column) => {
-      return {
-        ...column,
-        show: false,
-        pick: false,
-        highlight: false,
-        called: false,
-        issue: column.issue.map((issue) => {
-          return {
-            ...issue,
-            pick: false,
-            selection: false,
-            selection2: false,
-            shownRepositories: true,
-            archiveDropdownMenu: false,
-          };
-        }),
-      };
-    });
-    setColumns(handleAllShow);
-  }
+    setColumns(
+      columns.map((d) => {
+        return {
+          pick: false,
+          select: true,
+          id: d.id,
+          name: d.name,
+          show: false,
+          tables: "",
+          called: false,
+          highlight: false,
+          count: 0,
+          issue: d.issue,
+        };
+      })
+    );
+  }, []);
 
   function DropItem(id) {
     onClick2();
@@ -284,18 +255,6 @@ function App() {
     setColumns(updateColumns);
   }
 
-  /* const [update, setUpdate] =  useState([])
-  function gone() {
-    columns.map((column) => {
-      return column.issue.map((issue) => {
-        console.log(issue.tables)
-        setUpdate(prev => 
-          [prev, issue.tables]
-        )
-      })
-    })
-  } */
-
   function newIssue(id, valueCollected) {
     onClick2();
     let newIssue = {
@@ -308,6 +267,9 @@ function App() {
       issueCreated: true,
       isArchived: false,
       archiveDropdownMenu: false,
+      dataRepositoryUrl: "",
+      currentRepoName: "",
+      issueNumber: "",
     };
 
     let updateColumns = columns.map((column) => {
@@ -326,9 +288,9 @@ function App() {
   }
 
   function deleteItem2(id, columnId) {
-    // onClick2();
+    onClick2();
     let updateColumns = columns.map((column) => {
-      console.log(id, columnId, column.id)
+      console.log(id, columnId, column.id);
       if (columnId === column.id) {
         return {
           ...column,
@@ -343,16 +305,14 @@ function App() {
   function deleteItem3(columnId, id) {
     // onClick2();
     let updateColumns = columns.map((column) => {
-      console.log(id, columnId, column.id)
+      console.log(id, columnId, column.id);
       if (columnId === column.id) {
-          column.issue = column.issue.filter((item) => item.id !== id)
-        
+        column.issue = column.issue.filter((item) => item.id !== id);
       }
       return column;
     });
     setColumns(updateColumns);
   }
-
 
   function deleteAllItem(id, columnId) {
     let updateColumns = columns.map((column) => {
@@ -418,7 +378,7 @@ function App() {
           pick: false,
           issue: column.issue.map((issue) => {
             if (id === issue.id) {
-              return { ...issue, pick: !issue.pick };
+              return { ...issue, pick: !issue.pick, shownRepositories: true };
             }
             return { ...issue, selection: false, pick: false };
           }),
@@ -440,10 +400,9 @@ function App() {
     setColumns(updateColumns);
   }
 
-
   function ArchiveDropdown(columnId, id) {
-   // setShowss(false);
-   // onClick2();
+    setShowss(false);
+    onClick2();
     let updateColumns = columns.map((column) => {
       if (columnId === column.id) {
         return {
@@ -454,9 +413,17 @@ function App() {
           pick: false,
           issue: column.issue.map((issue) => {
             if (id === issue.id) {
-              return { ...issue, archiveDropdownMenu: !issue.archiveDropdownMenu };
+              return {
+                ...issue,
+                archiveDropdownMenu: !issue.archiveDropdownMenu,
+              };
             }
-            return { ...issue, selection: false, pick: false, archiveDropdownMenu: false };
+            return {
+              ...issue,
+              selection: false,
+              pick: false,
+              archiveDropdownMenu: false,
+            };
           }),
         };
       } else if (columnId !== column.id) {
@@ -476,7 +443,6 @@ function App() {
     setColumns(updateColumns);
   }
 
-
   function changeIssueCreatedState(id, columnId, issueCreated) {
     let updateColumns = columns.map((column) => {
       if (columnId === column.id) {
@@ -484,7 +450,7 @@ function App() {
           ...column,
           issue: column.issue.map((issue) => {
             if (id === issue.id) {
-              return { ...issue, issueCreated: false };
+              return { ...issue, issueCreated: false, pick: false };
             }
             return { ...issue };
           }),
@@ -503,7 +469,10 @@ function App() {
           ...column,
           issue: column.issue.map((issue) => {
             if (id === issue.id) {
-              return { ...issue, isArchived: true };
+              return {
+                ...issue,
+                isArchived: true,
+              };
             }
             return { ...issue };
           }),
@@ -515,23 +484,23 @@ function App() {
   }
 
   function unArchiveItem(columnId, id) {
-   // onClick2();
+    onClick2();
     let updateColumns = columns.map((column) => {
       if (columnId === column.id) {
         return {
           ...column,
           issue: column.issue.map((issue) => {
-            console.log(columnId, column.id, issue.id, id, issue.isArchived)
+            console.log(columnId, column.id, issue.id, id, issue.isArchived);
             if (id === issue.id) {
-              issue.isArchived = false 
-            };
-            return issue ;
-          })
+              issue.isArchived = false;
+            }
+            return issue;
+          }),
         };
       }
       return column;
-    })
-    setColumns(updateColumns)
+    });
+    setColumns(updateColumns);
   }
 
   function archiveItem2(columnId) {
@@ -576,20 +545,6 @@ function App() {
     });
     setColumns(updateColumns);
   }
-
-  let menuRef3 = useRef();
-  useEffect(() => {
-    let handler = (e) => {
-      if (!menuRef3.current.contains(e.target)) {
-        closeAll3();
-        console.log(menuRef3.current);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => {
-      document.removeEventListener("mousedown", handler);
-    };
-  });
 
   function closeAll3(id) {
     const updateColumns = columns.map((column) => {
@@ -770,254 +725,345 @@ function App() {
     setColumns(closeAllInput);
   }
 
-  function saveUserName() {
-    newUserName();
-    setSavedUserName(true);
-  }
-  function newUserName() {
-    setUserName(userName);
-  }
+  //implementing the draggable function
 
-  function saveApiKey() {
-    newApiKey();
-    setSavedApiKey(true);
-  }
-  function newApiKey() {
-    setApiKey(apiKey);
-  }
-
-/*   const reorderIssueList = (sourceCol, startIndex, endIndex) => {
-    const newTaskIds = Array.from(sourceCol);
-   const [removed] = newTaskIds.splice(startIndex, 1);
-   newTaskIds.splice(endIndex, 0, removed);
-   console.log(newTaskIds)
-  
-     const newIssue = {
-    ...sourceCol,
-    id: newTaskIds,
-   };  
-
-   return newIssue;
-  };*/
-  
   const onDragEnd = (result) => {
-    const { destination, source } = result;
-/* 
-          //if users tries to drop in an unknown destination
-          if (!destination) return;
-
-          //if the user drags and drops back in the same position
-          if (
-            destination.droppableId === source.droppableId &&
-            destination.index === source.index
-          ) {
-            return;
-          }
-
-    //if the user drops within the same column but same position
-
-    const sourceCol = issue[source.droppableId];
-    const destinationCol = issue[destination.droppableId]
-
-    if(sourceCol.id === destinationCol.id){
-      const newIssue = reorderIssueList(
-        sourceCol,
-        source.index,
-        destination.index
-      )
-
-          const newState = {
-        ...issue,
-        [newIssue.id]: newIssue
-      }    
-
-     // 
-      setIssue(newState);
+    // check if the draggable is dropped outside of the droppable
+    if (!result.destination) {
       return;
-    };
-    //if the user moves from one column to another
+    }
 
- */
-   
+    // get the source and destination columns
+    const sourceColumn = columns.find(
+      (col) => col.id === result.source.droppableId
+    );
+    const destColumn = columns.find(
+      (col) => col.id === result.destination.droppableId
+    );
+
+    // if the item is dropped in the same column, just reorder the items
+    if (result.source.droppableId === result.destination.droppableId) {
+      const newIssue = Array.from(sourceColumn.issue);
+      const [removed] = newIssue.splice(result.source.index, 1);
+      newIssue.splice(result.destination.index, 0, removed);
+
+      const newColumn = {
+        ...sourceColumn,
+        issue: newIssue,
+      };
+
+      const newData = columns.map((col) => {
+        if (col.id === result.source.droppableId) {
+          return newColumn;
+        }
+        return col;
+      });
+
+      setColumns(newData);
+    } else {
+      // if the item is dropped in a different column, remove the item from the source column
+      // and add it to the destination column
+      const sourceTaskIds = [...sourceColumn.issue];
+      const destTaskIds = [...destColumn.issue];
+      const [removed] = sourceTaskIds.splice(result.source.index, 1);
+      destTaskIds.splice(result.destination.index, 0, removed);
+      const newData = columns.map((col) => {
+        if (col.id === result.source.droppableId) {
+          return { ...col, issue: sourceTaskIds };
+        }
+        if (col.id === result.destination.droppableId) {
+          return { ...col, issue: destTaskIds };
+        }
+        return col;
+      });
+      setColumns(newData);
+    }
   };
- 
+
+  let menuRef = useRef();
+  useEffect(() => {
+    let handler = (e) => {
+      if (!menuRef.current.contains(e.target)) {
+        closeAll();
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => {
+      document.removeEventListener("mousedown", handler);
+    };
+  });
+
+  function closeAll() {
+    setShowss(false);
+    const handleAllShow = columns.map((column) => {
+      return {
+        ...column,
+        show: false,
+        pick: false,
+        highlight: false,
+        called: false,
+        issue: column.issue.map((issue) => {
+          return {
+            ...issue,
+            pick: false,
+            selection: false,
+            selection2: false,
+            shownRepositories: true,
+            archiveDropdownMenu: false,
+          };
+        }),
+      };
+    });
+    setColumns(handleAllShow);
+  }
+
+  const [savedUserName, setSavedUserName] = useState(false);
+  const [savedApiKey, setSavedApiKey] = useState(false);
+  const [userName, setUserName] = useState("");
+  const [apiKey, setApiKey] = useState("");
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    const fetchRepos = async () => {
+      const res = await fetch(`https://api.github.com/users/${owner}/repos`);
+      const data = await res.json();
+      //console.log(data.name, data.id);
+
+      setItems(data);
+    };
+    fetchRepos();
+  }, [userName]);
+
+  const currentApiKey =
+    apiKey === "" ? "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" : apiKey;
+
+  const octokit = new Octokit({
+    auth: currentApiKey,
+  });
+
+  const owner = userName === "" ? "Dikeprosper123" : userName;
+
+  const postIssue = async (itemId, id, columnId, tables) => {
+    const repo = items.map((item) => {
+      if (itemId === item.id) {
+        console.log(item.name);
+        return item.name;
+      }
+    });
+
+    const res = await octokit
+      .request("POST https://api.github.com/repos/{owner}/{repo}/issues", {
+        owner: owner,
+        repo: repo,
+        title: tables,
+      })
+      .then((res) => {
+        if (res.status == 201) {
+          console.log(res.data);
+          const updateColumns = columns.map((column) => {
+            if (columnId === column.id) {
+              return {
+                ...column,
+                issue: column.issue.map((issue) => {
+                  if (id === issue.id) {
+                    return {
+                      ...issue,
+                      pick: false,
+                      currentRepoName: repo,
+                      dataRepositoryUrl: res.data.html_url,
+                      issueNumber: res.data.number,
+                      issueCreated: false,
+                    };
+                  }
+                  return { ...issue };
+                }),
+              };
+            }
+            return column;
+          });
+          setColumns(updateColumns);
+
+          alert(`issue created at ${res.data.html_url}`);
+        } else {
+          alert(`something went wrong. Response: ${JSON.stringify(res)}`);
+        }
+      });
+  };
+
   return (
-    <>
-    {/* <DragDropContext   onDragEnd={onDragEnd} >{ */}
-      <div className="body">
-        <div className="body1">
-          <div style={{ position: "sticky", left: "0" }}>
-            <div className="form-input-username1">
-              {" "}
-              <div>
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    saveUserName();
-                  }}
-                >
-                  <div className="">
-                    <input
-                      autoFocus
-                      className="form-input-username2"
-                      id="name"
-                      placeholder="Enter your username"
-                      type="text"
-                      value={userName}
-                      onChange={(e) => {
-                        setUserName(e.target.value);
-                      }}
-                    />
-                  </div>
-                </form>
-              </div>
-              <div className="form-input-username3" onClick={saveUserName}>
-                {savedUserName ? "saved" : "save"}
-              </div>
-            </div>
-
-            <div className="form-input-username1">
-              {" "}
-              <div>
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    saveApiKey();
-                  }}
-                >
-                  <div className="">
-                    <input
-                      autoFocus
-                      className="form-input-username2"
-                      id="api key"
-                      placeholder="Enter your Api-key"
-                      type="text"
-                      value={apiKey}
-                      onChange={(e) => {
-                        setApiKey(e.target.value);
-                      }}
-                    />
-                  </div>
-                </form>
-              </div>
-              <div className="form-input-username3" onClick={saveApiKey}>
-                {savedApiKey ? "saved" : "save"}
-              </div>
-            </div>
-          </div>
-
-          {archivedState ? (
-             <>
-              <div style={{ position: "sticky", left: "0" }}>
-                <button
-                  className="archived-button"
-                  onClick={() => setArchivedState(false)}
-                >
-                  View Archived Items
-                </button>
-              </div>
-              <div className="drop-down">
-                <div className="drop-down51">
-                  <div className="total-column"  ref={menuRef}>
-                    {columns.map((column, index) => {
-                      return (
-                        <Column
-                          key={column.id}
-                          {...column}
-                          index={index}
-                          column={column}
-                          onClick={() => DropItem(column.id)}
-                          updateColumn={updateColumn}
-                          hideSpecificColumn={hideSpecificColumn}
-                          handleAllShow={handleAllShow}
-                          deleteSpecificItem={deleteSpecificItem}
-                          Hidden={Hidden}
-                          Visible={Visible}
-                          AddItem={AddItem}
-                          openInput={openInput}
-                          closeInput={closeInput}
-                          closeAll={closeAll}
-                          userName={userName}
-                          apiKey={apiKey}
-                          newIssue={newIssue}
-                          deleteItem2={deleteItem2}
-                          section={section}
-                          section2={section2}
-                          closeAll3={closeAll3}
-                          closeAll2={closeAll2}
-                          menuRef3={menuRef3}
-                          dropItem2={dropItem2}
-                          showRepositories={showRepositories}
-                          changeIssueCreatedState={changeIssueCreatedState}
-                          archiveItem={archiveItem}
-                          onClick3={dropItem2}
-                          archiveItem2={archiveItem2}
-                          deleteAllItem={deleteAllItem}
-                        />
-                      );
-                    })}
-                    ;
-                  </div>
-                  {dropDown ? (
-                    <DropDownItem
-                      newColumns={newColumns}
-                      Hidden={Hidden}
-                      Visible={Visible}
-                      handleShowss={handleShowss}
-                      showss={showss}
-                      hideShowss={hideShowss}
-                    />
-                  ) : (
-                    <button className="add-button" onClick={onClick1}>
-                      +
-                    </button>
-                  )}
-                </div>
-              </div>
-              </>
-          ) : (
-            <div className="archive-container" >
-              <div className="archive-container1">
+    <DragDropContext onDragEnd={onDragEnd}>
+      {
+        <div className="body">
+          <div className="body1">
+            <div style={{ position: "sticky", left: "0" }}>
+              <div className="form-input-username1">
                 {" "}
-                <BiArrowBack onClick={() => setArchivedState(true)} /> &nbsp;
-                &nbsp;Archive
-              </div>
-              <div className="archive-container2">
-                <div className="archive-container3">
-                  <div className="archive-container4">
-                    {" "}
-                    <div> {totalLength} archived item</div>
-                  </div>
-                  {totalLength === 0 ? (
-                    <div className="archived-container11">
-                      <HiOutlineArchive className="icons-archived-container11" />
-                      <h4>There aren't any archived items</h4>
-                      <p>
-                        Archive items from a project view and they'll be shown
-                        here.
-                      </p>
+                <div>
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      saveUserName();
+                    }}
+                  >
+                    <div className="">
+                      <input
+                        autoFocus
+                        className="form-input-username2"
+                        id="name"
+                        placeholder="Enter your username"
+                        type="text"
+                        value={userName}
+                        onChange={(e) => {
+                          setUserName(e.target.value);
+                        }}
+                      />
                     </div>
-                  ) : null}
-                  {columns.map((column) => (
-                    <Archived
-                    key={column.id}
-                    {...column}
-                    unArchiveItem={unArchiveItem}
-                    ArchiveDropdown={ArchiveDropdown}
-                    menuRef={menuRef}
-                    deleteItem3={deleteItem3}
-                    />
-                  )
-                    
-                  )}
+                  </form>
+                </div>
+                <div className="form-input-username3" onClick={saveUserName}>
+                  {savedUserName ? "saved" : "save"}
+                </div>
+              </div>
+
+              <div className="form-input-username1">
+                {" "}
+                <div>
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      saveApiKey();
+                    }}
+                  >
+                    <div className="">
+                      <input
+                        autoFocus
+                        className="form-input-username2"
+                        id="api key"
+                        placeholder="Enter your Api-key"
+                        type="text"
+                        value={apiKey}
+                        onChange={(e) => {
+                          setApiKey(e.target.value);
+                        }}
+                      />
+                    </div>
+                  </form>
+                </div>
+                <div className="form-input-username3" onClick={saveApiKey}>
+                  {savedApiKey ? "saved" : "save"}
                 </div>
               </div>
             </div>
-          )}
+
+            {archivedState ? (
+              <>
+                <div style={{ position: "sticky", left: "0" }}>
+                  <button
+                    className="archived-button"
+                    onClick={() => setArchivedState(false)}
+                  >
+                    View Archived Items
+                  </button>
+                </div>
+                <div className="drop-down">
+                  <div className="drop-down51" ref={menuRef}>
+                    <div className="total-column">
+                      {columns.map((column, index) => {
+                        return (
+                          <Column
+                            key={column.id}
+                            {...column}
+                            index={index}
+                            column={column}
+                            onClick={() => DropItem(column.id)}
+                            updateColumn={updateColumn}
+                            hideSpecificColumn={hideSpecificColumn}
+                            handleAllShow={handleAllShow}
+                            deleteSpecificItem={deleteSpecificItem}
+                            Hidden={Hidden}
+                            Visible={Visible}
+                            AddItem={AddItem}
+                            openInput={openInput}
+                            closeInput={closeInput}
+                            closeAll={closeAll}
+                            newIssue={newIssue}
+                            deleteItem2={deleteItem2}
+                            section={section}
+                            section2={section2}
+                            closeAll3={closeAll3}
+                            closeAll2={closeAll2}
+                            dropItem2={dropItem2}
+                            showRepositories={showRepositories}
+                            changeIssueCreatedState={changeIssueCreatedState}
+                            archiveItem={archiveItem}
+                            onClick3={dropItem2}
+                            archiveItem2={archiveItem2}
+                            deleteAllItem={deleteAllItem}
+                            items={items}
+                            postIssue={postIssue}
+                          />
+                        );
+                      })}
+                      ;
+                    </div>
+                    {dropDown ? (
+                      <DropDownItem
+                        newColumns={newColumns}
+                        Hidden={Hidden}
+                        Visible={Visible}
+                        handleShowss={handleShowss}
+                        showss={showss}
+                        hideShowss={hideShowss}
+                      />
+                    ) : (
+                      <button className="add-button" onClick={onClick1}>
+                        +
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="archive-container">
+                <div className="archive-container1">
+                  {" "}
+                  <BiArrowBack onClick={() => setArchivedState(true)} /> &nbsp;
+                  &nbsp;Archive
+                </div>
+                <div className="archive-container2">
+                  <div className="archive-container3" ref={menuRef}>
+                    <div className="archive-container4" onClick={closeAll}>
+                      {" "}
+                      <div> {totalLength} archived item</div>
+                    </div>
+                    {totalLength === 0 ? (
+                      <div className="archived-container11">
+                        <HiOutlineArchive className="icons-archived-container11" />
+                        <h4>There aren't any archived items</h4>
+                        <p>
+                          Archive items from a project view and they'll be shown
+                          here.
+                        </p>
+                      </div>
+                    ) : null}
+                    {columns.map((column) => (
+                      <Archived
+                        key={column.id}
+                        {...column}
+                        unArchiveItem={unArchiveItem}
+                        ArchiveDropdown={ArchiveDropdown}
+                        deleteItem3={deleteItem3}
+                        closeAll={closeAll}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-    {/* }</DragDropContext> */}
-   </>
+      }
+    </DragDropContext>
   );
 }
 

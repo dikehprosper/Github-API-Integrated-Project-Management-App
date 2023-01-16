@@ -14,68 +14,14 @@ function Issues(props) {
     border: props.selection ? "1px solid grey" : "none",
   };
 
-  const [items, setItems] = useState([]);
- // const [shownRepositories, setShownRepositories] = useState(true);
-  const [issueNumber, setIssueNumber] = useState("");
-  const [currentRepoName, setCurrentRepoName] = useState("");
-  const [dataRepositoryUrl , setDataRepositoryUrl] = useState("");
 
-  useEffect(() => {
-    const fetchRepos = async () => {
-      const res = await fetch(`https://api.github.com/users/${owner}/repos`);
-      const data = await res.json();
-      //console.log(data.name, data.id);
+  const showRepositories = () => {
 
-      setItems(data);
-    };
-    fetchRepos();
-  }, [props.userName]);
-
-
-  const apiKey =
-    props.apiKey === ""
-      ? "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"
-      : props.apiKey;
-
-  const octokit = new Octokit({
-    auth: apiKey,
-  });
-
-  const owner = props.userName === "" ? "Dikeprosper123" : props.userName;
-
-  const postIssue = async (id) => {
-    props.closeAll2(props.id, props.columnId);
-    const repo = items.map((item) => {
-      if (id === item.id) {
-        console.log(item.name);
-        return item.name;
-      }
-    });
-
-    const res = await octokit
-      .request("POST https://api.github.com/repos/{owner}/{repo}/issues", {
-        owner: owner,
-        repo: repo,
-        title: props.tables,
-      })
-      .then((res) => {
-        if (res.status == 201) {
-          console.log(res.data);
-          setIssueNumber(res.data.number);
-          props.changeIssueCreatedState(props.id, props.columnId, props.issueCreated);
-          setCurrentRepoName(repo);
-          alert(`issue created at ${res.data.html_url}`);
-          setDataRepositoryUrl(res.data.html_url)
-        } else {
-          alert(`something went wrong. Response: ${JSON.stringify(res)}`);
-        }
-      });
-      
-  };
-
-  function showRepositories() {
     props.showRepositories(props.id, props.columnId);
   }
+
+  
+
 
   function section() {
     props.section(props.id, props.columnId);
@@ -105,15 +51,15 @@ function Issues(props) {
     display: props.isArchived ? "none" : "grid",
   };
 
+  function closeAll(){
+    props.closeAll();
+    props.closeAll2(props.id, props.columnId);
+  }
+
  
 
   return (
-    /* <Draggable key={props.id} draggableId={`${props.id}`} index={props.index}>
-      {(draggableProvided, draggableSnapshot) => ( */
         <div
-          /* ref={draggableProvided.innerRef}
-          {...draggableProvided.draggableProps}
-          {...draggableProvided.dragHandleProps} */
           style={style9}
         >
           {props.issueCreated ? (
@@ -126,9 +72,7 @@ function Issues(props) {
               <div className="issues2">
                 <div
                   className="issue-name"
-                  onClick={() => {
-                    props.closeAll2(props.id, props.columnId);
-                  }}
+                  onClick={closeAll}
                 >
                   <VscIssueDraft className="icons" /> Draft
                 </div>
@@ -180,20 +124,23 @@ function Issues(props) {
                     <div className="list-drop-down41" style={style7}>
                       <div className="list-drop-down5">
                         <div>
-                          {items.length === 0 ? (
+                          {props.items.length === 0 ? (
                             <>
                               <p>No items to display!!</p>
                             </>
                           ) : (
                             <>
-                              {items.map((item) => {
+                              {props.items.map((item) => {
                                 return (
                                   <Items
                                     key={item.id}
-                                    id={item.id}
+                                    itemId={item.id}
                                     name={item.name}
-                                    postIssue={postIssue}
-
+                                    postIssue={props.postIssue}
+                                    columnId={props.columnId}
+                                    id={props.id}
+                                    closeAll2={props.closeAll2}
+                                    tables={props.tables}
                                   />
                                 );
                               })}
@@ -206,17 +153,13 @@ function Issues(props) {
                 </div>
                 <div
                   className="empty-space"
-                  onClick={() => {
-                    props.closeAll2(props.id, props.columnId);
-                  }}
+                  onClick={closeAll}
                 ></div>
               </div>
 
               <div
                 className="issues2"
-                onClick={() => {
-                  props.closeAll2(props.id, props.columnId);
-                }}
+                onClick={closeAll}
               >
                 {" "}
                 {props.tables}
@@ -232,14 +175,12 @@ function Issues(props) {
               <div className="issues2">
                 <div
                   className="issue-name"
-                  onClick={() => {
-                    props.closeAll2(props.id, props.columnId);
-                  }}
+                  onClick={closeAll}
                 >
                   {" "}
                   <VscIssueDraft className="icons-1" />{" "}
-                  <a href={dataRepositoryUrl} target="_blank"><span className="span1">{currentRepoName}</span></a>
-                  <span>#{issueNumber}</span>
+                  <a href={props.dataRepositoryUrl} target="_blank"><span className="span1">{props.currentRepoName}</span></a>
+                  <span>#{props.issueNumber}</span>
                 </div>
                 <div
                   className="drop-down5"
@@ -263,6 +204,9 @@ function Issues(props) {
                         tables={props.tables}
                         columnId={props.columnId}
                          onClick3={props.onClick3}
+                         issueNumber={props.issueNumber}
+                         currentRepoName={props.currentRepoName}
+                         dataRepositoryUrl={props.dataRepositoryUrl}
                         />
 
                       <DeleteItem2
@@ -277,17 +221,13 @@ function Issues(props) {
                 </div>
                 <div
                   className="empty-space"
-                  onClick={() => {
-                    props.closeAll2(props.id, props.columnId);
-                  }}
+                  onClick={closeAll}
                 ></div>
               </div>
 
               <div
                 className="issues2"
-                onClick={() => {
-                  props.closeAll2(props.id, props.columnId);
-                }}
+                onClick={closeAll}
               >
                 {" "}
                 {props.tables}
@@ -295,8 +235,6 @@ function Issues(props) {
             </div>
           )}
         </div>
-    /*   )}
-    </Draggable> */
   );
 }
 
