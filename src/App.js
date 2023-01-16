@@ -835,7 +835,7 @@ function App() {
   }, [userName]);
 
   const currentApiKey =
-    apiKey === "" ? "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" : apiKey;
+    apiKey === "" ? "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" : apiKey;
 
   const octokit = new Octokit({
     auth: currentApiKey,
@@ -858,7 +858,7 @@ function App() {
         title: tables,
       })
       .then((res) => {
-        if (res.status == 201) {
+        if (res.status === 201) {
           console.log(res.data);
           const updateColumns = columns.map((column) => {
             if (columnId === column.id) {

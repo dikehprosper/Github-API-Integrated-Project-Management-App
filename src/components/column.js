@@ -9,7 +9,6 @@ import { nanoid } from "nanoid";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import ArchiveAll from "./ArchiveAll";
 import DeleteAll from "./DeleteAll";
-import { DragDropContext } from "react-beautiful-dnd";
 
 function Column(props, { menuRef1, menuRef2}) {
   const [name, setName] = useState(props.name);
@@ -166,6 +165,7 @@ function Column(props, { menuRef1, menuRef2}) {
                 <div
                   ref={droppableProvided.innerRef}
                   {...droppableProvided.droppableProps}
+                  className="container17-1"
                 >
                   <div className="container18">
                     {props.issue.map((issue, index) => (
@@ -179,7 +179,7 @@ function Column(props, { menuRef1, menuRef2}) {
                             ref={draggableProvided.innerRef}
                             {...draggableProvided.draggableProps}
                             {...draggableProvided.dragHandleProps}
-                            
+                            className="container17-1"
                           >
                             <Issues
                               key={issue.id}

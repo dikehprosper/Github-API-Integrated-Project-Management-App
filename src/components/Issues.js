@@ -49,6 +49,7 @@ function Issues(props) {
 
   const style9 = {
     display: props.isArchived ? "none" : "grid",
+    overflowX: "visible",
   };
 
   function closeAll(){
@@ -61,6 +62,7 @@ function Issues(props) {
   return (
         <div
           style={style9}
+          className="issues1-11"
         >
           {props.issueCreated ? (
             <div

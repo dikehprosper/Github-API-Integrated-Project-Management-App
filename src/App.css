@@ -94,6 +94,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  overflow-x: visible;
 }
 
 
@@ -116,12 +117,13 @@
   flex-direction: column;
   height: 350px;
   overflow-y: auto;
+  overflow-x: visible;
 }
 
 .container18{
   flex: 1;
   flex-direction: column;
-  min-height: 20px;
+  min-height: 100px;
   overflow-y: visible;
   overflow-x: visible;
 }
@@ -357,18 +359,19 @@ button.add-button:hover {
 
 .list-drop-down4-1 {
   min-width: 170px;
-  max-width: 172px;
+  max-width: 190px;
   height: 80px;
   background: rgba(128, 128, 128, 0.411);
   border: 1px solid grey;
   position: absolute;
   top: 35px;
-  left: 2px;
+  left: -14px;
   border-radius: 10px;
   display: grid;
   gap: 2px;
   z-index: 100;
   white-space: nowrap;
+  overflow: visible;
 }
 
 .list-drop-down4-2 {
@@ -411,11 +414,19 @@ button.add-button:hover {
 
 .list-drop-down5 {
   background-color: rgb(32, 30, 30);
-  border-radius: 9px 9px 9px 9px;
+  border-radius: 10px;
   display: grid;
   gap: 2px;
   padding-top: 3px;
   width: 100%;
+  overflow-x: visible;
+}
+.container17-1{
+  overflow-x: visible;
+}
+
+.container17-2{
+  overflow-x: visible;
 }
 
 .list-drop-down3 {
@@ -735,6 +746,7 @@ button.add-button:hover {
   flex-direction: row;
   font-weight: 450;
   font-size: 13px;
+  overflow-x: visible;
 
 }
 
@@ -745,6 +757,9 @@ background-color: transparent;
 color: white;
 border: 1px solid white;
 font-size: 14px;
+}
+.issues1-11{
+  overflow-x: visible;
 }
 
 .archive-container{
@@ -907,6 +922,7 @@ margin-top: -3px;
   padding-left: 15px;
   align-items: center;
   height: 30px;
+  overflow-x: visible;
 }
 
 .empty-space {
