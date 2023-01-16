@@ -835,7 +835,7 @@ function App() {
   }, [userName]);
 
   const currentApiKey =
-    apiKey === "" ? "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" : apiKey;
+    apiKey === "" ? "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" : apiKey;
 
   const octokit = new Octokit({
     auth: currentApiKey,
