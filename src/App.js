@@ -865,7 +865,7 @@ function App() {
 
 
   const currentApiKey =
-    apiKey === "" ? API_KEY : apiKey;
+    apiKey === "" ? "" : apiKey;
 
   const octokit = new Octokit({
     auth: currentApiKey,
