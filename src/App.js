@@ -14,11 +14,15 @@ import { HiOutlineArchive } from "react-icons/hi";
 import { isAccordionItemSelected } from "react-bootstrap/esm/AccordionContext";
 import ArchiveAll from "./components/ArchiveAll";
 import { Octokit } from "@octokit/rest";
+import API_KEY from "./components/apikey";
+
+
 
 function App() {
   const [dropDown, setDropDown] = useState(false);
   const [showss, setShowss] = useState(false);
   const [archivedState, setArchivedState] = useState(true);
+  const [fetchdata, setFetchData] = useState(false);
 
   const handleShowss = () => {
     setShowss(true);
@@ -270,6 +274,8 @@ function App() {
       dataRepositoryUrl: "",
       currentRepoName: "",
       issueNumber: "",
+      lastExecutedTime: null, 
+      timeSinceLastExecution: null,
     };
 
     let updateColumns = columns.map((column) => {
@@ -472,6 +478,8 @@ function App() {
               return {
                 ...issue,
                 isArchived: true,
+                lastExecutedTime: Date.now(),
+                timeSinceLastExecution: null,
               };
             }
             return { ...issue };
@@ -481,7 +489,28 @@ function App() {
       return column;
     });
     setColumns(updateColumns);
+   
   }
+
+
+
+  /*  setTimeout(() => {
+    const updatedItems = columns.map(column => {
+      column.issue.map(issue => {
+       if (issue.lastExecutedTime) {
+        const currentTime = new Date();
+        const timeDifference = currentTime - issue.lastExecutedTime;
+        return {
+          ...issue,
+          timeSinceLastExecution: `${Math.round(timeDifference / (1000 * 60 * 60))} hours ago`
+        };
+      }
+      return issue;
+    })});
+        setColumns(updatedItems);
+  }, [columns]); */
+
+ 
 
   function unArchiveItem(columnId, id) {
     onClick2();
@@ -521,7 +550,7 @@ function App() {
 
   function showRepositories(id, columnId) {
     setShowss(false);
-
+     setFetchData(data=>!data);
     const updateColumns = columns.map((column) => {
       if (columnId === column.id) {
         return {
@@ -832,10 +861,11 @@ function App() {
       setItems(data);
     };
     fetchRepos();
-  }, [userName]);
+  }, [fetchdata]);
+
 
   const currentApiKey =
-    apiKey === "" ? "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" : apiKey;
+    apiKey === "" ? API_KEY : apiKey;
 
   const octokit = new Octokit({
     auth: currentApiKey,
@@ -1030,8 +1060,10 @@ function App() {
                   <BiArrowBack onClick={() => setArchivedState(true)} /> &nbsp;
                   &nbsp;Archive
                 </div>
+                <div className="note">You can click on any empty area on your screen to update the time a task was archived if a task is archived</div>
                 <div className="archive-container2">
                   <div className="archive-container3" ref={menuRef}>
+                    
                     <div className="archive-container4" onClick={closeAll}>
                       {" "}
                       <div> {totalLength} archived item</div>
@@ -1054,6 +1086,7 @@ function App() {
                         ArchiveDropdown={ArchiveDropdown}
                         deleteItem3={deleteItem3}
                         closeAll={closeAll}
+                        userName={userName}
                       />
                     ))}
                   </div>

@@ -7,7 +7,7 @@ import RestoreArchive from "./RestoreArchive";
 function Archived(props, { menuRef }) {
   const [show, setShow] = useState(false);
 
-  //console.log(props.id)
+  console.log(props.archivedTime)
   return (
     <div key={props.id}>
       {props.issue.map((issue) => {
@@ -19,13 +19,12 @@ function Archived(props, { menuRef }) {
           display: issue.archiveDropdownMenu ? "grid" : "none",
         };
 
-       console.log(issue.issueNumber);
         return (
-          <div className="archive-container5" key={issue.id}  >
-            <div style={style}  >
-              <div className="archived-container6" >
+          <div className="archive-container5" key={issue.id}>
+            <div style={style}>
+              <div className="archived-container6">
                 <div className="archived-container8" onClick={props.closeAll}>
-                  {issue.created ? (
+                  {issue.issueCreated ? (
                     <>
                       <VscIssueDraft className="icons" />
                     </>
@@ -35,8 +34,36 @@ function Archived(props, { menuRef }) {
                     </>
                   )}
                 </div>
-                <div className="archived-container9"><div className="archived-container9-2" >{issue.tables} &nbsp; #{issue.issueNumber}</div> <div className="archived-container9-1" onClick={props.closeAll} ></div></div>
-                
+                <div className="archived-container9">
+                  <div className="archived-container9-2">
+                    {issue.tables} &nbsp;
+                    {issue.issueNumber ? <>#{issue.issueNumber}</> : null}
+                    {issue.isArchived && (
+                      <div
+                        className="archived-container9-3"
+                        onClick={props.closeAll}
+                      >
+                        archived at about &nbsp;
+                        <span className="span2">
+                    {issue.isArchived && Math.floor(Math.round(Date.now()-issue.lastExecutedTime)/1000)}
+                        </span>{" "}
+                        &nbsp; seconds ago by &nbsp;
+                        <span className="span3">
+                          {props.userName === "" ? (
+                            <>Dikeprosper123</>
+                          ) : (
+                            <>{props.userName}</>
+                          )}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <div
+                    className="archived-container9-1"
+                    onClick={props.closeAll}
+                  ></div>
+                </div>
+
                 <div
                   className="archived-container10"
                   onClick={() => props.ArchiveDropdown(props.id, issue.id)}

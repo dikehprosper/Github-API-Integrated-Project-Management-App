@@ -127,7 +127,6 @@
   overflow-y: visible;
   overflow-x: visible;
 }
-
 .add-button {
   background-color: #1f252e;
   padding: 10px 10px;
@@ -871,7 +870,40 @@ font-size: 14px;
   min-width: 10px;
   word-wrap: normal;
   white-space: nowrap;
+  position: relative;
 }
+
+.archived-container9-3{
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  bottom: -12px;
+left: 5px;
+font-size: 12px;
+font-style: italic;
+}
+
+.span2{
+  color: rgb(123, 255, 0);
+  font-style: italic;
+}
+
+.note{
+  color: aqua;
+  font-style: italic;
+  font-size: 12px;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+.span3{
+  color: gold;
+  font-style: italic;
+}
+
+
+
 
 
 .archived-container10 {
