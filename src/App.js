@@ -14,6 +14,7 @@ import { HiOutlineArchive } from "react-icons/hi";
 import { isAccordionItemSelected } from "react-bootstrap/esm/AccordionContext";
 import ArchiveAll from "./components/ArchiveAll";
 import { Octokit } from "@octokit/rest";
+//import { Dotenv } from "dotenv";
 
 
 
@@ -23,6 +24,7 @@ function App() {
   const [showss, setShowss] = useState(false);
   const [archivedState, setArchivedState] = useState(true);
   const [fetchdata, setFetchData] = useState(false);
+  //Dotenv.config();
 
   const handleShowss = () => {
     setShowss(true);
@@ -865,7 +867,7 @@ function App() {
 
 
   const currentApiKey =
-    apiKey === "" ? "" : apiKey;
+    apiKey === "" ? process.env.REACT_APP_API_KEY : apiKey;
 
   const octokit = new Octokit({
     auth: currentApiKey,
