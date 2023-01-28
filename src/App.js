@@ -3,18 +3,13 @@ import DropDownItem from "./components/DropDownItem";
 import React, { useEffect, useRef, useState } from "react";
 import Column from "./components/Column";
 import { nanoid } from "nanoid";
-import Archive from "./components/Archived";
 import { DragDropContext } from "react-beautiful-dnd";
-import { propTypes } from "react-bootstrap/esm/Image";
 import Archived from "./components/Archived";
 import { BiArrowBack } from "react-icons/bi";
-import { VscEllipsis } from "react-icons/vsc";
-import { VscIssueDraft } from "react-icons/vsc";
 import { HiOutlineArchive } from "react-icons/hi";
-import { isAccordionItemSelected } from "react-bootstrap/esm/AccordionContext";
-import ArchiveAll from "./components/ArchiveAll";
 import { Octokit } from "@octokit/rest";
-//import { Dotenv } from "dotenv";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 
@@ -24,8 +19,8 @@ function App() {
   const [showss, setShowss] = useState(false);
   const [archivedState, setArchivedState] = useState(true);
   const [fetchdata, setFetchData] = useState(false);
-  //Dotenv.config();
 
+ 
   const handleShowss = () => {
     setShowss(true);
     const handleAllShow = columns.map((column) => {
@@ -79,21 +74,9 @@ function App() {
   const totalLength = getTotalLength(columns, "issue", "isArchived");
   // getting username and api key
 
-  function saveUserName() {
-    newUserName();
-    setSavedUserName(true);
-  }
-  function newUserName() {
-    setUserName(userName);
-  }
+  
 
-  function saveApiKey() {
-    newApiKey();
-    setSavedApiKey(true);
-  }
-  function newApiKey() {
-    setApiKey(apiKey);
-  }
+
 
   //functions for outer columns
 
@@ -494,26 +477,6 @@ function App() {
    
   }
 
-
-
-  /*  setTimeout(() => {
-    const updatedItems = columns.map(column => {
-      column.issue.map(issue => {
-       if (issue.lastExecutedTime) {
-        const currentTime = new Date();
-        const timeDifference = currentTime - issue.lastExecutedTime;
-        return {
-          ...issue,
-          timeSinceLastExecution: `${Math.round(timeDifference / (1000 * 60 * 60))} hours ago`
-        };
-      }
-      return issue;
-    })});
-        setColumns(updatedItems);
-  }, [columns]); */
-
- 
-
   function unArchiveItem(columnId, id) {
     onClick2();
     let updateColumns = columns.map((column) => {
@@ -849,14 +812,12 @@ function App() {
   }
 
   const [savedUserName, setSavedUserName] = useState(false);
-  const [savedApiKey, setSavedApiKey] = useState(false);
   const [userName, setUserName] = useState("");
-  const [apiKey, setApiKey] = useState("");
   const [items, setItems] = useState([]);
 
   useEffect(() => {
     const fetchRepos = async () => {
-      const res = await fetch(`https://api.github.com/users/${owner}/repos`);
+      const res = await fetch(`https://api.github.com/users/${owner}/repos`, {headers});
       const data = await res.json();
       //console.log(data.name, data.id);
 
@@ -865,15 +826,90 @@ function App() {
     fetchRepos();
   }, [fetchdata]);
 
-
-  const currentApiKey =
-    apiKey === "" ? process.env.REACT_APP_API_KEY : apiKey;
-
-  const octokit = new Octokit({
-    auth: currentApiKey,
+ 
+const headers = new Headers();
+headers.append('Authorization', `Token${process.env.REACT_APP_API_KEY}`)
+const notify = () => toast.error('Network Error!', {
+  position: "top-center",
+  autoClose: 3000,
+  hideProgressBar: false,
+  closeOnClick: true,
+  pauseOnHover: true,
+  draggable: true,
+  progress: undefined,
+  theme: "dark",
   });
 
-  const owner = userName === "" ? "Dikeprosper123" : userName;
+  const notify1 = () => toast.success('Username Succesfully Saved!', {
+    position: "top-center",
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "dark",
+    });
+
+    const notify2 = () => toast.warn('Username does not exist on Github!', {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+      });
+
+      const notify3 = () => toast.warn('No Username Currently Entered!', {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        });
+
+  const saveUserName = async () => {
+    try {
+      const response = await fetch(`https://api.github.com/users/${userName}`);
+      if (!response.ok) {
+        notify2();
+      }else{
+     notify1();
+      setSavedUserName(true);
+     }
+    } catch (error) {
+      if (error instanceof TypeError) {
+        notify();
+      } else {
+        notify2();
+      }
+    }
+  }
+
+  function collectUserName(){
+    if(userName === ""){
+      {notify3()}
+    }else{
+      {saveUserName()}
+    }
+  }
+ 
+
+
+ //Dotenv.config();
+// console.log(process.env.REACT_APP_API_KEY);
+ 
+
+  const octokit = new Octokit({
+    auth: process.env.REACT_APP_API_KEY,
+  });
+
+  const owner = savedUserName ? userName : "Dikeprosper123";
 
   const postIssue = async (itemId, id, columnId, tables) => {
     const repo = items.map((item) => {
@@ -915,76 +951,87 @@ function App() {
           });
           setColumns(updateColumns);
 
-          alert(`issue created at ${res.data.html_url}`);
+            setIssueCreatedResponse(true);
+           setLinkToIssueCreated(res.data.html_url);
         } else {
-          alert(`something went wrong. Response: ${JSON.stringify(res)}`);
+          setIssueCreatedResponse(false);
         }
       });
   };
 
+  function checkIssueCreatedState(){
+    if(issueCreatedResponse === true){ 
+      return (<div className="issueCreatedResponse1" >
+      <div className="issueCreatedResponse2">
+        <div className="issueCreatedResponse3">SUCCESSFUL!!!</div>
+        <div className="issueCreatedResponse4">issue created at &nbsp;<a href={linkToIssueCreated} target="_blank" >
+        <span className="issueCreatedResponse9">{linkToIssueCreated}</span></a> </div>
+        <div className="issueCreatedResponse5"> <div className="issueCreatedResponse6" onClick={() => (setIssueCreatedResponse(null))}>Close</div>
+         <div className="issueCreatedResponse6" ><a href={linkToIssueCreated} target="_blank">view</a></div></div>
+      </div>
+    </div>)}else if(issueCreatedResponse === false){
+    return <>
+       <div className="issueCreatedResponse1" >
+        <div className="issueCreatedResponse2">
+          <div className="issueCreatedResponse8">ERROR!!!</div>
+          <div className="issueCreatedResponse4">Something went wrong!!! </div>
+          <div className="issueCreatedResponse5"> 
+          <div className="issueCreatedResponse6" 
+          onClick={() => (setIssueCreatedResponse(null))}>
+            Close
+            </div>
+            </div>
+        </div>
+      </div>
+       </>} else{
+        return null
+       }
+  }
+
+  const styleSaved =  {
+    background: savedUserName ? "lightgreen" :  "black",
+    color:savedUserName? "black" : "white"
+  }
+
+
+  const [issueCreatedResponse, setIssueCreatedResponse] = useState(null);
+  const [linkToIssueCreated, setLinkToIssueCreated] = useState();
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       {
         <div className="body">
           <div className="body1">
+           {checkIssueCreatedState()}
             <div style={{ position: "sticky", left: "0" }}>
               <div className="form-input-username1">
                 {" "}
-                <div>
+                <div className="form-input-username-body"> 
                   <form
                     onSubmit={(e) => {
                       e.preventDefault();
-                      saveUserName();
+                      collectUserName();
                     }}
                   >
-                    <div className="">
                       <input
                         autoFocus
                         className="form-input-username2"
                         id="name"
-                        placeholder="Enter your username"
+                        placeholder="Enter a Github username"
                         type="text"
                         value={userName}
                         onChange={(e) => {
+                          setSavedUserName(false);
                           setUserName(e.target.value);
                         }}
                       />
-                    </div>
                   </form>
+                 
                 </div>
-                <div className="form-input-username3" onClick={saveUserName}>
-                  {savedUserName ? "saved" : "save"}
+                <div className="form-input-username3" onClick={collectUserName} style={styleSaved}>
+               <div className="saved3"> {savedUserName ? "saved" : "save"}</div> 
                 </div>
               </div>
 
-              <div className="form-input-username1">
-                {" "}
-                <div>
-                  <form
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      saveApiKey();
-                    }}
-                  >
-                    <div className="">
-                      <input
-                        autoFocus
-                        className="form-input-username2"
-                        id="api key"
-                        placeholder="Enter your Api-key"
-                        type="text"
-                        value={apiKey}
-                        onChange={(e) => {
-                          setApiKey(e.target.value);
-                        }}
-                      />
-                    </div>
-                  </form>
-                </div>
-                <div className="form-input-username3" onClick={saveApiKey}>
-                  {savedApiKey ? "saved" : "save"}
-                </div>
-              </div>
             </div>
 
             {archivedState ? (
@@ -1098,6 +1145,18 @@ function App() {
           </div>
         </div>
       }
+     <ToastContainer 
+     position="top-center"
+     autoClose={5000}
+     hideProgressBar={false}
+     newestOnTop={false}
+     closeOnClick
+     rtl={false}
+     pauseOnFocusLoss
+     draggable
+     pauseOnHover
+     theme="dark"
+     />
     </DragDropContext>
   );
 }

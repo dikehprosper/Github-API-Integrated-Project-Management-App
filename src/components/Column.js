@@ -1,11 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import Issues from "./Issues";
-import { HiOutlineArchive } from "react-icons/hi";
 import { BiHide } from "react-icons/bi";
 import { MdDriveFileRenameOutline } from "react-icons/md";
 import DeleteItem from "./DeleteItem";
 import AddItem from "./AddItem";
-import { nanoid } from "nanoid";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import ArchiveAll from "./ArchiveAll";
 import DeleteAll from "./DeleteAll";

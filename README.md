@@ -1,3 +1,21 @@
+# About
+this is a github project board
+There is a default repo attached to create issue on but can be modified by the user by imputing theirs or any other  GitHub username and a temporal apikey to create issue on the specific repo chosen 
+
+# Functionalities
+
+1. Add extra columns and name
+2. Modify current column name
+3. Hide/show any column chosen
+4. Delete any column chosen
+5. Create different issue in any column chosen
+6. Archive any issue seperately or all at once
+7. Delete any issue seperately or all at once
+8. Create issue to any repository 
+9. Drag and drop issue containers from one column to another 
+10. On viewing the archived items….Click on empty space on screen to update the exact time an issue was archived
+11. Click on reponame when issue is created to take you to the exact repo on GitHub where it was created
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

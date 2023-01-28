@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from "react";
 import DeleteItem2 from "./DeleteItem2";
 import { MdDriveFileRenameOutline, MdWrongLocation } from "react-icons/md";
-import { HiOutlineArchive } from "react-icons/hi";
 import { VscIssueDraft } from "react-icons/vsc";
-import { Octokit } from "@octokit/rest";
 import Items from "./Items";
-import { Draggable, Droppable } from "react-beautiful-dnd";
 import Archive from "./Archive";
 
 function Issues(props) {

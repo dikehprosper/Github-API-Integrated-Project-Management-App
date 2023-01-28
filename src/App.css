@@ -1,6 +1,6 @@
 .body {
   background-color: rgb(32, 30, 30);
-
+position: relative;
 }
 
 .body1 {
@@ -23,6 +23,159 @@
 }
 
 
+.issueCreatedResponse1{
+background: rgba(7, 7, 7, 0.781);
+position: absolute;
+width: 100vw;
+height: 100vh;
+z-index: 100;
+display: flex;
+justify-content: center;
+flex-direction: row;
+align-items: center;
+}
+.issueCreatedResponse2{
+  padding: 10px;
+  border: .5px solid grey;
+  color: white;
+  border-radius: 7px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+ background: black;
+}
+
+.issueCreatedResponse3{
+  color: rgb(44, 238, 44);
+height: 35px;
+font-weight: bold;
+font-size: 18px;
+border-bottom: .5px solid grey;
+width: 100%;
+margin-bottom: 10px;
+display: flex;
+flex-direction: row;
+justify-content:center ;
+align-items: center;
+}
+
+.issueCreatedResponse4{
+  min-width: 300px;
+  font-style: italic;
+  font-size: 15px;
+height: 40px;
+display: flex;
+flex-direction: row;
+justify-content:center ;
+align-items: center;
+margin-bottom: 10px
+}
+
+.issueCreatedResponse4 > a{
+  color: white; 
+
+}
+
+.issueCreatedResponse4 > a:hover{
+  color: blue;
+
+}
+
+.issueCreatedResponse5{
+height: 30px;
+display: flex;
+flex-direction: row;
+justify-content:end ;
+align-items: flex-start;
+padding-left: 10px;
+width: 100%;
+}
+
+.issueCreatedResponse6{
+  padding: 0px 5px;
+font-weight: bold;
+border-radius: 3px;
+border: .5px solid grey;
+cursor: pointer;
+margin-left: 10px;
+}
+
+.issueCreatedResponse6 > a{
+  text-decoration: none;
+  color: white;
+}
+
+.issueCreatedResponse6 > a:hover{
+  background: white;
+  color: black;
+}
+
+.issueCreatedResponse6:hover{
+  background: white;
+  color: black;
+}
+
+.issueCreatedResponse8{
+  color: rgb(219, 9, 9);
+height: 35px;
+font-weight: bold;
+font-size: 18px;
+border-bottom: .5px solid grey;
+width: 100%;
+margin-bottom: 10px;
+display: flex;
+flex-direction: row;
+justify-content:center ;
+align-items: center;
+}
+
+.issueCreatedResponse9{
+  pointer-events: none;
+}
+
+.displayUsernameAvailbilityStatus1{
+  position: absolute;
+  padding: 0px 6px;
+  background: white;
+  z-index: 100;
+  left: 400px;
+  top: 40%;
+  white-space: nowrap;
+}
+
+.progress-bar {
+  height: 4px;
+  background-color: red;
+  position: absolute;
+  bottom: -2;
+  animation: progress 4s linear;
+  margin-left: -6px;
+}
+
+.progress-bar1 {
+  height: 4px;
+  background-color: red;
+  position: absolute;
+  bottom: -2;
+  animation: progress 4s linear;
+  margin-left: -6px;
+}
+
+
+
+.displayUsernameAvailbilityStatus2{
+  position: absolute;
+  padding: 0px 6px;
+  background: white;
+  z-index: 100;
+  left: 400px;
+  top: 40%;
+  white-space: nowrap;;
+}
+
+
+
 .drop-down51 {
 
   display: flex;
@@ -36,6 +189,7 @@
 .total-column {
   display: flex;
   flex-direction: row;
+  gap: 6px;
 }
 
 .form-input {
@@ -57,9 +211,6 @@
   font-weight: bold;
 
 }
-
-
-
 
 .create-column-section {
   padding: 10px;
@@ -89,7 +240,6 @@
   font-size: 15px;
   min-width: 320px;
   max-width: 320px;
-  margin: 0px 6px;
   background-color: #090f1a;
   display: flex;
   flex-direction: column;
@@ -390,16 +540,17 @@ button.add-button:hover {
 
 .list-drop-down41 {
   min-width: 190px;
+  max-width: 230px;
   height: 120px;
   background: rgba(128, 128, 128, 0.411);
   border: 1px solid grey;
   position: absolute;
   top: 35px;
-  left: 5px;
+  left: -5px;
   border-radius: 10px;
   display: grid;
   gap: 2px;
-  z-index: 5;
+  z-index: 55;
   overflow-y: scroll;
   white-space: nowrap;
 }
@@ -972,12 +1123,15 @@ margin-top: -3px;
 
 
 .form-input-username1{
-  display: grid;
+  display: flex;
   justify-content: center;
-  grid-template-columns: 1fr 40px;
-  align-items: center;max-width: 350px;
+  flex-direction:row ;
+  align-items: center;
+  width: 350px;
   margin-left: 10px;
   height: 50px;
+  margin-bottom: 15px;
+
 }
 
 .span1 {
@@ -986,35 +1140,44 @@ margin-top: -3px;
   white-space: nowrap;
 }
 
+.form-input-username-body{
+  position: relative;
+  width: 320px;
+}
+
 
 .form-input-username2 {
   color: white;
   border: 1px solid grey;
   padding: 5px;
-  margin: 15px 5px 10px 15px;
+  margin: 15px 0px 10px 10px;
   border-radius: 3px;
-  width: 150px;
   display: flex; 
   flex-direction: row;
-  width: 300px;
+  width: 280px;
   background: black;
 }
 
 .form-input-username3 {
-  width: 80px; 
-  padding: 5px;
+  width: 70px; 
   margin-top: 2px;
-  background: white;
   border-radius: 0px 3px 3px 0px;
   display: flex;
   justify-content: center;
   flex-direction: row;
   align-items: center;
   font-weight: bold;
-  margin-left: -15px;
   margin-top: 4px;
   border: 1px solid grey;
+  cursor: pointer;
+  height: 37px;
 };
+.saved3{
+  width: auto;
+}
+.saved3:hover {
+  color: grey;
+}
 
 .api-data {
   overflow-y: hidden;
