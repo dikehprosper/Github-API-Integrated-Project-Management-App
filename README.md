@@ -1,6 +1,6 @@
 # About
 this is a github project board
-There is a default repo attached to create issue on but can be modified by the user by imputing theirs or any other  GitHub username and a temporal apikey to create issue on the specific repo chosen 
+There is a default repo attached to create issue on but can be modified by the user by imputing theirs or any other  GitHub username to create issue on the specific repo chosen 
 
 # Functionalities
 
