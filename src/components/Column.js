@@ -200,6 +200,7 @@ function Column(props, { menuRef1, menuRef2}) {
                               onClick3={props.onClick3}
                               items={props.items}
                               postIssue={props.postIssue}
+                              openProjectView={props.openProjectView}
                             />
                           </div>
                         )}

@@ -1,3 +1,4 @@
+/* eslint-disable no-lone-blocks */
 import "./App.css";
 import DropDownItem from "./components/DropDownItem";
 import React, { useEffect, useRef, useState } from "react";
@@ -8,19 +9,20 @@ import Archived from "./components/Archived";
 import { BiArrowBack } from "react-icons/bi";
 import { HiOutlineArchive } from "react-icons/hi";
 import { Octokit } from "@octokit/rest";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
-
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import LoadInfo from "./components/LoadInfo";
+import LoadInfo2 from "./components/LoadInfo2";
+import ProjectView from "./components/ProjectView";
 
 function App() {
   const [dropDown, setDropDown] = useState(false);
   const [showss, setShowss] = useState(false);
   const [archivedState, setArchivedState] = useState(true);
   const [fetchdata, setFetchData] = useState(false);
+  const [loaded, setLoaded] = useState(true);
+  const [loaded2, setLoaded2] = useState(false);
 
- 
   const handleShowss = () => {
     setShowss(true);
     const handleAllShow = columns.map((column) => {
@@ -56,7 +58,6 @@ function App() {
   };
 
   const [columns, setColumns] = useState([]);
-  const [count, setCount] = useState(0);
 
   //to get length of total archive items
   const getTotalLength = (array, innerArrayProperty, innerProperty) => {
@@ -73,10 +74,6 @@ function App() {
 
   const totalLength = getTotalLength(columns, "issue", "isArchived");
   // getting username and api key
-
-  
-
-
 
   //functions for outer columns
 
@@ -259,8 +256,9 @@ function App() {
       dataRepositoryUrl: "",
       currentRepoName: "",
       issueNumber: "",
-      lastExecutedTime: null, 
+      lastExecutedTime: null,
       timeSinceLastExecution: null,
+      projectViewState: false,
     };
 
     let updateColumns = columns.map((column) => {
@@ -318,6 +316,9 @@ function App() {
     setColumns(updateColumns);
   }
 
+  
+
+
   function section(id, columnId) {
     let updateColumns = columns.map((column) => {
       if (columnId === column.id) {
@@ -343,7 +344,7 @@ function App() {
           ...column,
           issue: column.issue.map((issue) => {
             if (id === issue.id && pick === true) {
-              return { ...issue, selection: true, pick: true };
+              return { ...issue, selection: true, pick: true, projectViewState: true };
             } else if (id === issue.id && pick === false) {
               return { ...issue, selection: false, pick: false };
             }
@@ -435,6 +436,7 @@ function App() {
   }
 
   function changeIssueCreatedState(id, columnId, issueCreated) {
+    console.log(id, columnId);
     let updateColumns = columns.map((column) => {
       if (columnId === column.id) {
         return {
@@ -451,6 +453,7 @@ function App() {
     });
     setColumns(updateColumns);
   }
+
 
   function archiveItem(id, columnId) {
     onClick2();
@@ -474,7 +477,6 @@ function App() {
       return column;
     });
     setColumns(updateColumns);
-   
   }
 
   function unArchiveItem(columnId, id) {
@@ -515,14 +517,14 @@ function App() {
 
   function showRepositories(id, columnId) {
     setShowss(false);
-     setFetchData(data=>!data);
+    setFetchData((data) => !data);
     const updateColumns = columns.map((column) => {
       if (columnId === column.id) {
         return {
           ...column,
           issue: column.issue.map((issue) => {
             if (id === issue.id) {
-              return { ...issue, shownRepositories: false };
+              return { ...issue, shownRepositories: false,projectViewState: true };
             }
             return { ...issue, shownRepositories: true };
           }),
@@ -532,6 +534,33 @@ function App() {
           ...column,
           issue: column.issue.map((issue) => {
             return { ...issue, shownRepositories: true };
+          }),
+        };
+      }
+      return column;
+    });
+    setColumns(updateColumns);
+  }
+
+  function openProjectView(id, columnId) {
+    setShowss(false);
+    setFetchData((data) => !data);
+    const updateColumns = columns.map((column) => {
+      if (columnId === column.id) {
+        return {
+          ...column,
+          issue: column.issue.map((issue) => {
+            if (id === issue.id) {
+              return { ...issue, projectViewState: true };
+            }
+            return { ...issue, projectViewState: false };
+          }),
+        };
+      } else if (columnId !== column.id) {
+        return {
+          ...column,
+          issue: column.issue.map((issue) => {
+            return { ...issue, projectViewState: false };
           }),
         };
       }
@@ -813,45 +842,86 @@ function App() {
 
   const [savedUserName, setSavedUserName] = useState(false);
   const [userName, setUserName] = useState("");
+  const [savedApikey, setSavedApikey] = useState(false);
+  const [apikey, setApikey] = useState("");
   const [items, setItems] = useState([]);
 
   useEffect(() => {
     const fetchRepos = async () => {
-      const res = await fetch(`https://api.github.com/users/${owner}/repos`, {headers});
+      const res = await fetch(`https://api.github.com/users/${owner}/repos`, {
+        headers,
+      });
       const data = await res.json();
       //console.log(data.name, data.id);
 
       setItems(data);
     };
     fetchRepos();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchdata]);
 
- 
-const headers = new Headers();
-headers.append('Authorization', `Token${process.env.REACT_APP_API_KEY}`)
-const notify = () => toast.error('Network Error!', {
-  position: "top-center",
-  autoClose: 3000,
-  hideProgressBar: false,
-  closeOnClick: true,
-  pauseOnHover: true,
-  draggable: true,
-  progress: undefined,
-  theme: "dark",
-  });
+  function checkAll() {
+    if (savedApikey) {
+      return toast.success(
+        "WellDone!..You have successfully added your apikey and a username",
+        {
+          position: "top-center",
+          autoClose: 7000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        }
+      );
+    } else {
+      return toast("Now, enter your api key", {
+        position: "top-center",
+        autoClose: 7000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    }
+  }
 
-  const notify1 = () => toast.success('Username Succesfully Saved!', {
-    position: "top-center",
-    autoClose: 3000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "dark",
-    });
+  function checkAll2() {
+    if (savedUserName) {
+      return toast.success(
+        "WellDone!..You have successfully added a username your api key",
+        {
+          position: "top-center",
+          autoClose: 7000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        }
+      );
+    } else {
+      return toast("Now, enter a Username", {
+        position: "top-center",
+        autoClose: 7000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    }
+  }
 
-    const notify2 = () => toast.warn('Username does not exist on Github!', {
+  const headers = new Headers();
+  headers.append("Authorization", `Token${process.env.REACT_APP_API_KEY}`);
+  const notify = () =>
+    toast.error("Network Error!", {
       position: "top-center",
       autoClose: 3000,
       hideProgressBar: false,
@@ -860,28 +930,54 @@ const notify = () => toast.error('Network Error!', {
       draggable: true,
       progress: undefined,
       theme: "dark",
-      });
+    });
 
-      const notify3 = () => toast.warn('No Username Currently Entered!', {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        });
+  const notify1 = () =>
+    toast.success("Username has been verified and also Saved!", {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
+
+  const notify2 = () =>
+    toast.warn("Username does not exist on Github!", {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
+
+  const notify3 = () =>
+    toast.warn("No Username Currently Entered!", {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
 
   const saveUserName = async () => {
     try {
       const response = await fetch(`https://api.github.com/users/${userName}`);
       if (!response.ok) {
         notify2();
-      }else{
-     notify1();
-      setSavedUserName(true);
-     }
+      } else {
+        notify1();
+        checkAll();
+        setSavedUserName(true);
+      }
     } catch (error) {
       if (error instanceof TypeError) {
         notify();
@@ -889,27 +985,113 @@ const notify = () => toast.error('Network Error!', {
         notify2();
       }
     }
-  }
+  };
 
-  function collectUserName(){
-    if(userName === ""){
-      {notify3()}
-    }else{
-      {saveUserName()}
+  function collectUserName() {
+    if (userName === "") {
+      {
+        notify3();
+      }
+    } else {
+      {
+        saveUserName();
+      }
     }
   }
- 
 
+  const notify5 = () =>
+    toast.error("Network Error!", {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
 
- //Dotenv.config();
-// console.log(process.env.REACT_APP_API_KEY);
- 
+  const notify6 = () =>
+    toast.success("Apikey is valid and has been Succesfully Saved!", {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
 
-  const octokit = new Octokit({
-    auth: process.env.REACT_APP_API_KEY,
-  });
+  const notify7 = () =>
+    toast.warn("Apikey does not authenticate!", {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
+
+  const notify8 = () =>
+    toast.warn("No Apikey Currently Entered!", {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
+
+  const saveApikey = async () => {
+    try {
+      const response = await fetch("https://api.github.com/user", {
+        headers: {
+          Authorization: `token ${apikey}`,
+        },
+      });
+      console.log(response);
+      if (response.status === 401 || response.status === 403) {
+        notify7();
+      } else if (response.status === 200 || response.status === 201) {
+        notify6();
+        checkAll2();
+        setSavedApikey(true);
+      }
+    } catch (error) {
+      if (error instanceof TypeError) {
+        notify5();
+      } else {
+        notify7();
+      }
+    }
+  };
+
+  function collectApikey() {
+    if (apikey === "") {
+      {
+        notify8();
+      }
+    } else {
+      {
+        saveApikey();
+      }
+    }
+  }
+
+  //Dotenv.config();
+  const variableValue = process.env.REACT_APP_API_KEY;
 
   const owner = savedUserName ? userName : "Dikeprosper123";
+  const auth = savedApikey ? apikey : process.env.REACT_APP_API_KEY;
+
+  const octokit = new Octokit({
+    auth: auth,
+  });
 
   const postIssue = async (itemId, id, columnId, tables) => {
     const repo = items.map((item) => {
@@ -919,133 +1101,245 @@ const notify = () => toast.error('Network Error!', {
       }
     });
 
-    const res = await octokit
-      .request("POST https://api.github.com/repos/{owner}/{repo}/issues", {
+    const response = await octokit.request(
+      "POST https://api.github.com/repos/{owner}/{repo}/issues",
+      {
         owner: owner,
         repo: repo,
         title: tables,
-      })
-      .then((res) => {
-        if (res.status === 201) {
-          console.log(res.data);
-          const updateColumns = columns.map((column) => {
-            if (columnId === column.id) {
-              return {
-                ...column,
-                issue: column.issue.map((issue) => {
-                  if (id === issue.id) {
-                    return {
-                      ...issue,
-                      pick: false,
-                      currentRepoName: repo,
-                      dataRepositoryUrl: res.data.html_url,
-                      issueNumber: res.data.number,
-                      issueCreated: false,
-                    };
-                  }
-                  return { ...issue };
-                }),
-              };
-            }
-            return column;
-          });
-          setColumns(updateColumns);
+      }
+    );
 
-            setIssueCreatedResponse(true);
-           setLinkToIssueCreated(res.data.html_url);
-        } else {
-          setIssueCreatedResponse(false);
+    if (response.status === 201) {
+      console.log(response.data);
+      const updateColumns = columns.map((column) => {
+        if (columnId === column.id) {
+          return {
+            ...column,
+            issue: column.issue.map((issue) => {
+              if (id === issue.id) {
+                return {
+                  ...issue,
+                  pick: false,
+                  currentRepoName: repo,
+                  dataRepositoryUrl: response.data.html_url,
+                  issueNumber: response.data.number,
+                  issueCreated: false,
+                };
+              }
+              return { ...issue };
+            }),
+          };
         }
+        return column;
       });
+      setColumns(updateColumns);
+      setIssueCreatedResponse(true);
+      setLinkToIssueCreated(response.data.html_url);
+    } else {
+      setIssueCreatedResponse(false);
+    }
   };
 
-  function checkIssueCreatedState(){
-    if(issueCreatedResponse === true){ 
-      return (<div className="issueCreatedResponse1" >
-      <div className="issueCreatedResponse2">
-        <div className="issueCreatedResponse3">SUCCESSFUL!!!</div>
-        <div className="issueCreatedResponse4">issue created at &nbsp;<a href={linkToIssueCreated} target="_blank" >
-        <span className="issueCreatedResponse9">{linkToIssueCreated}</span></a> </div>
-        <div className="issueCreatedResponse5"> <div className="issueCreatedResponse6" onClick={() => (setIssueCreatedResponse(null))}>Close</div>
-         <div className="issueCreatedResponse6" ><a href={linkToIssueCreated} target="_blank">view</a></div></div>
-      </div>
-    </div>)}else if(issueCreatedResponse === false){
-    return <>
-       <div className="issueCreatedResponse1" >
-        <div className="issueCreatedResponse2">
-          <div className="issueCreatedResponse8">ERROR!!!</div>
-          <div className="issueCreatedResponse4">Something went wrong!!! </div>
-          <div className="issueCreatedResponse5"> 
-          <div className="issueCreatedResponse6" 
-          onClick={() => (setIssueCreatedResponse(null))}>
-            Close
+  function checkIssueCreatedState() {
+    if (issueCreatedResponse === true) {
+      return (
+        <div className="issueCreatedResponse1">
+          <div className="issueCreatedResponse2">
+            <div className="issueCreatedResponse3">SUCCESSFUL!!!</div>
+            <div className="issueCreatedResponse4">
+              issue created at &nbsp;
+              <a href={linkToIssueCreated} target="_blank">
+                <span className="issueCreatedResponse9">
+                  {linkToIssueCreated}
+                </span>
+              </a>{" "}
             </div>
+            <div className="issueCreatedResponse5">
+              {" "}
+              <div
+                className="issueCreatedResponse6"
+                onClick={() => setIssueCreatedResponse(null)}
+              >
+                Close
+              </div>
+              <div className="issueCreatedResponse6">
+                <a href={linkToIssueCreated} target="_blank">
+                  view
+                </a>
+              </div>
             </div>
+          </div>
         </div>
-      </div>
-       </>} else{
-        return null
-       }
+      );
+    } else if (issueCreatedResponse === false) {
+      return (
+        <>
+          <div className="issueCreatedResponse1">
+            <div className="issueCreatedResponse2">
+              <div className="issueCreatedResponse8">ERROR!!!</div>
+              <div className="issueCreatedResponse4">
+                Something went wrong!!!{" "}
+              </div>
+              <div className="issueCreatedResponse5">
+                <div
+                  className="issueCreatedResponse6"
+                  onClick={() => setIssueCreatedResponse(null)}
+                >
+                  Close
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      );
+    } else {
+      return null;
+    }
   }
 
-  const styleSaved =  {
-    background: savedUserName ? "lightgreen" :  "black",
-    color:savedUserName? "black" : "white"
-  }
+  const styleSaved = {
+    background: savedUserName ? "lightgreen" : "black",
+    color: savedUserName ? "black" : "white",
+  };
 
+  const styleSaved2 = {
+    background: savedApikey ? "lightgreen" : "black",
+    color: savedApikey ? "black" : "white",
+  };
 
   const [issueCreatedResponse, setIssueCreatedResponse] = useState(null);
   const [linkToIssueCreated, setLinkToIssueCreated] = useState();
+
+useEffect(() => {
+console.log(columns)
+},[columns]);
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       {
         <div className="body">
+          {loaded ? (
+            <LoadInfo
+              close={() => setLoaded(false)}
+              displayAbout={() => {
+                setLoaded(false);
+                setLoaded2(true);
+              }}
+            />
+          ) : null}
+          {loaded2 ? <LoadInfo2 close={() => setLoaded2(false)} /> : null}
           <div className="body1">
-           {checkIssueCreatedState()}
+            {checkIssueCreatedState()}
             <div style={{ position: "sticky", left: "0" }}>
               <div className="form-input-username1">
                 {" "}
-                <div className="form-input-username-body"> 
+                <div className="form-input-username-body">
                   <form
                     onSubmit={(e) => {
                       e.preventDefault();
                       collectUserName();
                     }}
                   >
-                      <input
-                        autoFocus
-                        className="form-input-username2"
-                        id="name"
-                        placeholder="Enter a Github username"
-                        type="text"
-                        value={userName}
-                        onChange={(e) => {
-                          setSavedUserName(false);
-                          setUserName(e.target.value);
-                        }}
-                      />
+                    <input
+                      autoFocus
+                      className="form-input-username2"
+                      id="name"
+                      placeholder="Enter your Github username"
+                      type="text"
+                      value={userName}
+                      onChange={(e) => {
+                        setSavedUserName(false);
+                        setUserName(e.target.value);
+                      }}
+                    />
                   </form>
-                 
                 </div>
-                <div className="form-input-username3" onClick={collectUserName} style={styleSaved}>
-               <div className="saved3"> {savedUserName ? "saved" : "save"}</div> 
+                <div
+                  className="form-input-username3"
+                  onClick={collectUserName}
+                  style={styleSaved}
+                >
+                  <div className="saved3">
+                    {" "}
+                    {savedUserName ? "saved" : "save"}
+                  </div>
                 </div>
               </div>
-
+              <div className="form-input-username1">
+                {" "}
+                <div className="form-input-username-body">
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      collectApikey();
+                    }}
+                  >
+                    <input
+                      autoFocus
+                      className="form-input-username2"
+                      id="name"
+                      placeholder="Enter your temporal api key to use"
+                      type="text"
+                      value={apikey}
+                      onChange={(e) => {
+                        setSavedApikey(false);
+                        setApikey(e.target.value);
+                      }}
+                    />
+                  </form>
+                </div>
+                <div
+                  className="form-input-username3"
+                  onClick={collectApikey}
+                  style={styleSaved2}
+                >
+                  <div className="saved3">
+                    {" "}
+                    {savedApikey ? "saved" : "save"}
+                  </div>
+                </div>
+              </div>
             </div>
 
             {archivedState ? (
               <>
-                <div style={{ position: "sticky", left: "0" }}>
+                <div
+                  style={{ position: "sticky", left: "0" }}
+                  className="button-how-to-use1"
+                >
                   <button
                     className="archived-button"
                     onClick={() => setArchivedState(false)}
                   >
                     View Archived Items
                   </button>
+                  <button
+                    className="archived-button"
+                    onClick={() => setLoaded(true)}
+                  >
+                    How to use
+                  </button>
                 </div>
                 <div className="drop-down">
+                 
+
                   <div className="drop-down51" ref={menuRef}>
+                  {columns.map((column) => {
+                    return (
+                      <div key={column.id}>
+                        {column.issue.map((issue) => {
+                          if (issue.projectViewState) {
+                            return <ProjectView 
+                            {...issue}
+                            />;
+                          } else {
+                            return null;
+                          }
+                        })}
+                      </div>
+                    );
+                  })}
                     <div className="total-column">
                       {columns.map((column, index) => {
                         return (
@@ -1080,6 +1374,7 @@ const notify = () => toast.error('Network Error!', {
                             deleteAllItem={deleteAllItem}
                             items={items}
                             postIssue={postIssue}
+                            openProjectView={openProjectView}
                           />
                         );
                       })}
@@ -1109,10 +1404,12 @@ const notify = () => toast.error('Network Error!', {
                   <BiArrowBack onClick={() => setArchivedState(true)} /> &nbsp;
                   &nbsp;Archive
                 </div>
-                <div className="note">You can click on any empty area on your screen to update the time a task was archived if a task is archived</div>
+                <div className="note">
+                  You can click on any empty area on your screen to update the
+                  time a task was archived if a task is archived
+                </div>
                 <div className="archive-container2">
                   <div className="archive-container3" ref={menuRef}>
-                    
                     <div className="archive-container4" onClick={closeAll}>
                       {" "}
                       <div> {totalLength} archived item</div>
@@ -1145,18 +1442,18 @@ const notify = () => toast.error('Network Error!', {
           </div>
         </div>
       }
-     <ToastContainer 
-     position="top-center"
-     autoClose={5000}
-     hideProgressBar={false}
-     newestOnTop={false}
-     closeOnClick
-     rtl={false}
-     pauseOnFocusLoss
-     draggable
-     pauseOnHover
-     theme="dark"
-     />
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
     </DragDropContext>
   );
 }

@@ -54,6 +54,9 @@ function Issues(props) {
     props.closeAll2(props.id, props.columnId);
   }
 
+  function openProjectView(){
+    props.openProjectView(props.id, props.columnId);
+  }
  
 
   return (
@@ -157,11 +160,12 @@ function Issues(props) {
               </div>
 
               <div
-                className="issues2"
-                onClick={closeAll}
+                className=".issues2-23"
+                /* onClick={closeAll} */
               >
-                {" "}
-                {props.tables}
+                <div  className="openProjectView" > <p onClick={openProjectView}> {props.tables}</p></div>
+               
+              
               </div>
             </div>
           ) : (
@@ -178,7 +182,7 @@ function Issues(props) {
                 >
                   {" "}
                   <VscIssueDraft className="icons-1" />{" "}
-                  <a href={props.dataRepositoryUrl} target="_blank"><span className="span1">{props.currentRepoName}</span></a>
+                  <a href={props.dataRepositoryUrl} target="_blank" rel="noreferrer"><span className="span1">{props.currentRepoName}</span></a>
                   <span>#{props.issueNumber}</span>
                 </div>
                 <div
@@ -225,11 +229,11 @@ function Issues(props) {
               </div>
 
               <div
-                className="issues2"
-                onClick={closeAll}
+                className=".issues2-23"
+                /* onClick={closeAll} */
               >
-                {" "}
-                {props.tables}
+           <div  className="openProjectView" > <p onClick={openProjectView}> {props.tables}</p></div>
+          
               </div>
             </div>
           )}
