@@ -1,20 +1,6 @@
 # About
-this is a github project board
-There is a default repo attached to create issue on but can be modified by the user by imputing theirs or any other  GitHub username to create issue on the specific repo chosen 
+A project management app with Github API integration, modeled after Github Project Board enabling users to create, update, open, and close issues seamlessly within the platform and also enabling users to organize and prioritize tasks in an intuitive, visually appealing manner.
 
-# Functionalities
-
-1. Add extra columns and name
-2. Modify current column name
-3. Hide/show any column chosen
-4. Delete any column chosen
-5. Create different issue in any column chosen
-6. Archive any issue seperately or all at once
-7. Delete any issue seperately or all at once
-8. Create issue to any repository 
-9. Drag and drop issue containers from one column to another 
-10. On viewing the archived items….Click on empty space on screen to update the exact time an issue was archived
-11. Click on reponame when issue is created to take you to the exact repo on GitHub where it was created
 
 # Getting Started with Create React App
 
