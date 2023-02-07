@@ -257,26 +257,7 @@ align-items: center;
   flex-direction: column;
 
 }
-.main-section2{
-  height: auto;
-  flex: 1;
-  width: auto;
-}
-.container17{
-  display: flex;
-  flex-direction: column;
-  height: 350px;
-  overflow-y: auto;
-  overflow-x: visible;
-}
 
-.container18{
-  flex: 1;
-  flex-direction: column;
-  min-height: 100px;
-  overflow-y: visible;
-  overflow-x: visible;
-}
 .add-button {
   background-color: #1f252e;
   padding: 10px 10px;
@@ -1099,29 +1080,7 @@ margin-top: -3px;
   font-size: 14px;
 }
 
-.issues2 {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  min-height: 30px;
-  overflow-x: visible;
-  justify-content: center;
-  margin-left: 15px;
-}
 
-
-
-.empty-space {
-  width: 100%;
-  height: 100%;
-}
-
-.issue-name {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-}
 
 
 
@@ -1334,6 +1293,33 @@ border-bottom: .5px solid grey;
   position: relative;
   overflow-y: auto;
 }
+
+.close2{
+  line-height: 35px;
+  margin: 0px 20px;
+  font-size: 20px;
+}
+
+.close3{
+  height: 50px;
+  width: 130px;
+  border-radius: 7px;
+  border: .5px solid grey;
+  font-weight: bold;
+  font-size: 15px;
+  margin-top: 60px ;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.close3:hover{
+color: black;
+background-color: white;
+}
+
 .button-how-to-use{
   color: blue;
   text-decoration: underline;
@@ -1358,11 +1344,10 @@ align-items: center;
   position: fixed;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.593);
+  background-color: rgba(0, 0, 0, 0.744);
   overflow-y: auto;
   height: 100%;
   display: flex;
-  z-index: 101;
 }
 
 .project-view-style1{
@@ -1381,9 +1366,11 @@ align-items: center;
 }
 
 .project-view-style2 {
-  height: 123px;
+  min-height: 123px;
   background-color: white;
   border-bottom: .3px solid rgba(128, 128, 128, 0.569);
+  display: flex;
+  flex-direction: column;
 }
 
 .project-view-style3 {
@@ -1447,6 +1434,40 @@ border-bottom: .3px solid rgba(128, 128, 128, 0.569);
 height: 150px;
 }
 
+.project-view-style12{
+  height: 41px;
+  width: 100%;
+  margin-bottom: .5px solid grey;
+  display: flex;
+  justify-content: space-between;
+  padding-left: 30px;
+  padding-right: 30px;
+  }
+
+  .project-view-style13{
+    height: 41px;
+    width: 100%;
+    margin-bottom: .5px solid grey;
+    display: flex;
+    justify-content: space-between;
+    padding-left: 30px;
+    padding-right: 30px;
+    }
+
+    .project-view-style14{
+      height: 41px;
+      width: 100%;
+      margin-bottom: .5px solid grey;
+      }
+
+      
+    .project-view-style16{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+      }
+
+
 @media (max-width:950px) {
   .project-view-style1{
     width: 100%;
@@ -1459,39 +1480,190 @@ height: 150px;
   }
 
   .project-view-style2{
-    height: 125px;
+    height: 150px;
   }
 
   .project-view-style9{
-    height: 150px;
+    height: 125px;
     }
 
+}
+
+
+
+.close-icons{
+  height: 23px;
+  width: 23px;
+  border-radius: 4px;
+}
+
+.close-icons:hover {
+  background: rgba(191, 185, 185, 0.643);
+}
+
+.project-view-style15{
+  display: flex;
+  flex-direction: row;
+  justify-items: center;
+  align-items: center;
+}
+
+.project-view-style17{
+  display: flex;
+  flex-direction: row;
+justify-content: space-between;
+  align-items: center;
+  width: 100%;
+
+}
+
+.project-view-style18{
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+}
+
+.project-view-style19{
+width: 42px;
+height: 28px;
+border: 4px;
+background: rgba(128, 128, 128, 0.304);
+border: 1px solid grey;
+border-radius: 4px;
+justify-self: flex-end;
+display: flex;
+justify-content: center;
+align-items: center;
+cursor: pointer;
+}
+
+.project-view-style20{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+align-items: center;
+}
+
+.project-view-style21{
+  width: 60px;
+  height: 30px;
+  border-radius: 4px;
+  margin: 0px 10px;
+  background-color: rgba(0, 128, 0, 0.635);
+  color: white;
+  display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+cursor: pointer;
+}
+
+.project-view-style21:hover {
+  background-color: rgba(0, 128, 0, 0.338); ;
+}
+
+.project-view-style22{
+  width: 70px;
+  height: 30px;
+  border-radius: 4px;
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+  background-color: rgba(128, 128, 128, 0.429);
+  cursor: pointer;
+}
+
+.project-view-style22:hover {
+  background-color: rgba(128, 128, 128, 0.232);
+}
+
+.project-view-style23{
+  width: 100%;
+  height: 30px;
+  flex: 1 1 auto;
+  border-radius: 5px;
+
+}
+
+.main-section2{
+  height: auto;
+  flex: 1;
+  width: auto;
+}
+.container17{
+  display: flex;
+  flex-direction: column;
+  height: 350px;
+  overflow-y: auto;
+  overflow-x: visible;
+}
+
+.container18{
+  flex: 1;
+  flex-direction: column;
+  min-height: 40px;
+  overflow-y: visible;
+  overflow-x: visible;
+}
+
+
+.issues2-23 {
+  margin-left: 15px;
+  height: 30px;
+  overflow-x: visible;
+  display: flex;
+  flex-direction: row-reverse;
 }
 
 .openProjectView{
   word-break: break-all;
   white-space: wrap;
-  margin: 5px 15px 5px 15px;
-  
+  margin: 0px 15px 0px 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 
-.openProjectView > p:hover {
+.openProjectView1{
+width: 100%;
+height: 100%;
+flex: 1;
+}
+
+
+.empty-space {
+  width: 100%;
+  height: 100%;
+}
+
+.issue-name {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.issues2 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  min-height: 30px;
+  overflow-x: visible;
+  justify-content: center;
+  margin-left: 15px;
+}
+
+.openProjectView3:hover{
   cursor: pointer;
   color: blue;
   text-decoration: underline;
 }
 
-.openProjectView > p {
-margin: 0px;
-min-width: 20px;
+.openProjectView3{
+  line-height: 14px;
+  margin-bottom: 3px;
 }
-
-
-
-.issues2-23 {
-  margin-left: 15px;
-  min-height: 30px;
-  overflow-x: visible;
-}
-
-

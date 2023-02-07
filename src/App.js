@@ -317,7 +317,23 @@ function App() {
   }
 
   
-
+  function updateColumn2(id, columnId, valueCollected) {
+    let updateColumns = columns.map((column) => {
+      if (columnId === column.id) {
+        return {
+          ...column,
+          issue: column.issue.map((issue) => {
+            if (id === issue.id) {
+              return { ...issue, tables: valueCollected };
+            }
+            return { ...issue };
+          }),
+        };
+      }
+      return column;
+    });
+    setColumns(updateColumns);
+  }
 
   function section(id, columnId) {
     let updateColumns = columns.map((column) => {
@@ -344,7 +360,7 @@ function App() {
           ...column,
           issue: column.issue.map((issue) => {
             if (id === issue.id && pick === true) {
-              return { ...issue, selection: true, pick: true, projectViewState: true };
+              return { ...issue, selection: true, pick: true};
             } else if (id === issue.id && pick === false) {
               return { ...issue, selection: false, pick: false };
             }
@@ -524,7 +540,7 @@ function App() {
           ...column,
           issue: column.issue.map((issue) => {
             if (id === issue.id) {
-              return { ...issue, shownRepositories: false,projectViewState: true };
+              return { ...issue, shownRepositories: false };
             }
             return { ...issue, shownRepositories: true };
           }),
@@ -568,6 +584,34 @@ function App() {
     });
     setColumns(updateColumns);
   }
+
+  function closeProjectView(id, columnId) {
+    setShowss(false);
+    setFetchData((data) => !data);
+    const updateColumns = columns.map((column) => {
+      if (columnId === column.id) {
+        return {
+          ...column,
+          issue: column.issue.map((issue) => {
+            if (id === issue.id) {
+              return { ...issue, projectViewState: false };
+            }
+            return { ...issue, projectViewState: false };
+          }),
+        };
+      } else if (columnId !== column.id) {
+        return {
+          ...column,
+          issue: column.issue.map((issue) => {
+            return { ...issue, projectViewState: false };
+          }),
+        };
+      }
+      return column;
+    });
+    setColumns(updateColumns);
+  }
+
 
   function closeAll3(id) {
     const updateColumns = columns.map((column) => {
@@ -1141,6 +1185,25 @@ function App() {
     }
   };
 
+async function updateColumn3(valueCollected, issueNumber, currentRepoName){
+
+  
+ const response = await octokit.request('PATCH /repos/{owner}/{repo}/issues/{issue_number}', {
+    owner: owner,
+    repo: currentRepoName,
+    issue_number: issueNumber ,
+    title: valueCollected,
+  })
+
+  if (response.status === 201) {
+    console.log(response.data);
+  }else{
+    console.log("error")
+  }
+}
+  
+  
+
   function checkIssueCreatedState() {
     if (issueCreatedResponse === true) {
       return (
@@ -1211,9 +1274,6 @@ function App() {
   const [issueCreatedResponse, setIssueCreatedResponse] = useState(null);
   const [linkToIssueCreated, setLinkToIssueCreated] = useState();
 
-useEffect(() => {
-console.log(columns)
-},[columns]);
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
@@ -1332,6 +1392,11 @@ console.log(columns)
                           if (issue.projectViewState) {
                             return <ProjectView 
                             {...issue}
+                            key = {issue.id}
+                            closeProjectView={closeProjectView}
+                            updateColumn2= {updateColumn2}
+                            columnId= {column.id}
+                            updateColumn3={updateColumn3}
                             />;
                           } else {
                             return null;
@@ -1375,6 +1440,7 @@ console.log(columns)
                             items={items}
                             postIssue={postIssue}
                             openProjectView={openProjectView}
+                           
                           />
                         );
                       })}

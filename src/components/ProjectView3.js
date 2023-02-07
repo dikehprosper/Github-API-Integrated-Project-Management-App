@@ -2,7 +2,6 @@ import React from "react";
 
 function ProjectView3() {
   return (
-    <div className="project-view-style">
       <div className="project-view-style1">
         <div className="project-view-style2"></div>
         <div className="project-view-style3">
@@ -19,7 +18,6 @@ function ProjectView3() {
           </div>
         </div>
       </div>
-    </div>
   );
 }
 export default ProjectView3;

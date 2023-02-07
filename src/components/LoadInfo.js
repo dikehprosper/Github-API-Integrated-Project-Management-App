@@ -9,7 +9,7 @@ function LoadInfo(props){
                 <div className="close" onClick={props.close}>X</div>
                 <p>Enter a temporal Github api key to authenticate your presense and also enter any username you want to work with.</p>
                 <p>On default, there is a dummy user already set so you can try the app without your apikey and username</p>
-                <p>To learn more, click <span  className="style6" onClick={props.displayAbout}>here</span> </p>
+                <p>To learn about the app, click <span  className="style6" onClick={props.displayAbout}>here</span> </p>
                 <h2 className="style5">Enjoy!!!!</h2>
             </div>
     

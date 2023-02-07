@@ -163,9 +163,7 @@ function Issues(props) {
                 className=".issues2-23"
                 /* onClick={closeAll} */
               >
-                <div  className="openProjectView" > <p onClick={openProjectView}> {props.tables}</p></div>
-               
-              
+               <div  className="openProjectView" >  <div className="openProjectView3" onClick={openProjectView} >{props.tables}</div> <div className="openProjectView1"></div></div>
               </div>
             </div>
           ) : (
@@ -232,7 +230,7 @@ function Issues(props) {
                 className=".issues2-23"
                 /* onClick={closeAll} */
               >
-           <div  className="openProjectView" > <p onClick={openProjectView}> {props.tables}</p></div>
+           <div  className="openProjectView"> <div className="openProjectView3" onClick={openProjectView}> {props.tables} </div> <div className="openProjectView1"></div> </div>
           
               </div>
             </div>
